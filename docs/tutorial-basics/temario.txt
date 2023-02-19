@@ -1,0 +1,53 @@
+Introducción
+
+¿Qué es SOLID?
+¿Por qué es importante seguir los principios SOLID en el desarrollo de software?
+¿Qué son los patrones de diseño de software?
+¿Por qué son útiles los patrones de diseño en el desarrollo de software?
+Principio de responsabilidad única (SRP)
+
+¿Qué es el principio SRP?
+¿Por qué es importante seguir el principio SRP?
+Ejemplos de cómo aplicar el principio SRP en el desarrollo de software
+Principio de abierto/cerrado (OCP)
+
+¿Qué es el principio OCP?
+¿Por qué es importante seguir el principio OCP?
+Ejemplos de cómo aplicar el principio OCP en el desarrollo de software
+Patrones de diseño relacionados con el principio OCP (por ejemplo, el patrón strategy)
+Principio de sustitución de Liskov (LSP)
+
+¿Qué es el principio LSP?
+¿Por qué es importante seguir el principio LSP?
+Ejemplos de cómo aplicar el principio LSP en el desarrollo de software
+
+Patrones de diseño relacionados con el principio LSP (por ejemplo, el patrón factory)
+
+Principio de segregación de la interfaz (ISP)
+
+¿Qué es el principio ISP?
+¿Por qué es importante seguir el principio ISP?
+Ejemplos de cómo aplicar el principio ISP en el desarrollo de software
+Patrones de diseño relacionados con el principio ISP (por ejemplo, el patrón adapter)
+Principio de inversión de dependencia (DIP)
+
+¿Qué es el principio DIP?
+¿Por qué es importante seguir el principio DIP?
+Ejemplos de cómo aplicar el principio DIP en el desarrollo de software
+Patrones de diseño relacionados con el principio DIP (por ejemplo, el patrón dependency injection)
+Patrones de diseño creacionales
+
+¿Qué son los patrones de diseño creacionales?
+Ejemplos de patrones de diseño creacionales (por ejemplo, el patrón singleton, el patrón builder, el patrón factory)
+Patrones de diseño estructurales
+
+¿Qué son los patrones de diseño estructurales?
+Ejemplos de patrones de diseño estructurales (por ejemplo, el patrón adapter, el patrón decorator, el patrón facade)
+Patrones de diseño de comportamiento
+
+¿Qué son los patrones de diseño de comportamiento?
+Ejemplos de patrones de diseño de comportamiento (por ejemplo, el patrón strategy, el patrón observer, el patrón state)
+Conclusión
+
+Resumen de los principios SOLID y los patrones de diseño de software
+Importancia de seguir buenas prácticas en el desarrollo de software
