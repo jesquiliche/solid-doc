@@ -527,6 +527,140 @@ Algunas desventajas del patrón Builder pueden incluir:
 - c) Cuando se necesite crear objetos que no se puedan modificar una vez construidos.
 - Respuesta: a) Cuando se necesite crear objetos complejos de forma sencilla y flexible.
 
+### Prototype
+
+El patrón de diseño Prototype es un patrón creacional que permite la creación de nuevos objetos a partir de la clonación de objetos existentes. En lugar de crear nuevos objetos utilizando la palabra clave "new", este patrón crea nuevos objetos copiando uno existente. Esto es útil cuando la creación de objetos es costosa en términos de tiempo y recursos.
+
+El patrón Prototype se basa en la implementación de un método "clone()" que copia los atributos de un objeto existente a un nuevo objeto. El objeto original se conoce como "prototipo" y se utiliza como base para la creación de nuevos objetos.
+
+Este patrón puede ser utilizado cuando:
+
+La creación de objetos es costosa en términos de tiempo y recursos.
+El número de clases a instanciar es limitado y se conocen de antemano.
+Los objetos a crear son variantes de un objeto existente.
+Una de las ventajas de este patrón es que puede reducir el acoplamiento entre las clases y aumentar la flexibilidad del código.
+
+Sin embargo, una de las desventajas es que el patrón puede ser más difícil de implementar en lenguajes que no tienen soporte integrado para la clonación de objetos, y puede ser más difícil de entender y mantener si no se utiliza de manera adecuada.
+
+En resumen, el patrón Prototype permite la creación de nuevos objetos a partir de la clonación de objetos existentes, lo que puede ser útil cuando la creación de objetos es costosa en términos de tiempo y recursos. Aunque puede aumentar la flexibilidad y reducir el acoplamiento entre clases, puede ser más difícil de implementar y entender si no se utiliza de manera adecuada.
+
+¿En qué se basa el patrón Prototype?
+
+El patrón Prototype se basa en la implementación de un método "clone()" que copia los atributos de un objeto existente a un nuevo objeto. El objeto original se conoce como "prototipo" y se utiliza como base para la creación de nuevos objetos.
+
+¿Para qué se utiliza el patrón Prototype?
+
+El patrón Prototype se utiliza para crear nuevos objetos a partir de la clonación de objetos existentes. Esto puede ser útil cuando la creación de objetos es costosa en términos de tiempo y recursos, y cuando los objetos a crear son variantes de un objeto existente.
+
+¿Qué es un prototipo en el patrón Prototype?
+
+Un prototipo en el patrón Prototype es un objeto existente que se utiliza como base para la creación de nuevos objetos. El prototipo se clona para crear un nuevo objeto con los mismos atributos.
+
+¿Cuál es una de las ventajas del patrón Prototype?
+
+Una de las ventajas del patrón Prototype es que puede reducir el acoplamiento entre las clases y aumentar la flexibilidad del código.
+
+¿Cuál es una de las desventajas del patrón Prototype?
+
+Una de las desventajas del patrón Prototype es que puede ser más difícil de implementar en lenguajes que no tienen soporte integrado para la clonación de objetos, y puede ser más difícil de entender y mantener si no se utiliza de manera adecuada.
+
+#### Ejemplo de desarrollo Prototype
+
+En este ejemplo, creamos un objeto prototipo Car con un color rojo, modelo BMW y 2 puertas. Luego, clonamos este objeto prototipo para crear un nuevo objeto Car con color azul y 4 puertas. Finalmente, mostramos la información del nuevo objeto Car creado a partir del prototipo.
+
+```js
+// Clase base Vehicle
+class Vehicle
+{
+    private $color;
+    private $numRuedas;
+    private $modelo;
+
+    public function __construct($color, $numRuedas, $modelo)
+    {
+        $this->color = $color;
+        $this->numRuedas = $numRuedas;
+        $this->modelo = $modelo;
+    }
+
+    // Getter y setters para las propiedades privadas
+    public function getColor()
+    {
+        return $this->color;
+    }
+
+    public function setColor($color)
+    {
+        $this->color = $color;
+    }
+
+    public function getNumRuedas()
+    {
+        return $this->numRuedas;
+    }
+
+    public function setNumRuedas($numRuedas)
+    {
+        $this->numRuedas = $numRuedas;
+    }
+
+    public function getModelo()
+    {
+        return $this->modelo;
+    }
+
+    public function setModelo($modelo)
+    {
+        $this->modelo = $modelo;
+    }
+
+    // Método clone para crear un nuevo objeto a partir del prototipo
+    public function __clone()
+    {
+        return new Vehicle($this->color, $this->numRuedas, $this->modelo);
+    }
+}
+
+// Subclase Car
+class Car extends Vehicle
+{
+    private $numPuertas;
+
+    public function __construct($color, $modelo, $numPuertas)
+    {
+        parent::__construct($color, 4, $modelo);
+        $this->numPuertas = $numPuertas;
+    }
+
+    // Getter y setter para la propiedad privada
+    public function getNumPuertas()
+    {
+        return $this->numPuertas;
+    }
+
+    public function setNumPuertas($numPuertas)
+    {
+        $this->numPuertas = $numPuertas;
+    }
+}
+
+// Creamos un objeto prototipo
+$carProto = new Car('Rojo', 'BMW', 2);
+
+// Clonamos el prototipo para crear un nuevo objeto Car
+$newCar = clone $carProto;
+$newCar->setColor('Azul');
+$newCar->setNumPuertas(4);
+
+// Mostramos la información del nuevo objeto Car
+echo "Color: " . $newCar->getColor() . "<br>";
+echo "Modelo: " . $newCar->getModelo() . "<br>";
+echo "Número de puertas: " . $newCar->getNumPuertas() . "<br>";
+echo "Número de ruedas: " . $newCar->getNumRuedas() . "<br>";
+```
+
+#### Desventajas de builder
+
 
 
 
