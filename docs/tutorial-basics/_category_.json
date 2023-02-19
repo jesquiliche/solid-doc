@@ -1,4 +1,8 @@
 {
-  "label": "SOLID",
-  "position": 1
+  "label": "Principios SOLID",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "description": "Principios SOLID"
+  }
 }

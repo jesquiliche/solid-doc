@@ -659,9 +659,182 @@ echo "Número de puertas: " . $newCar->getNumPuertas() . "<br>";
 echo "Número de ruedas: " . $newCar->getNumRuedas() . "<br>";
 ```
 
-#### Desventajas de builder
+#### Desventajas de Prototype
 
+1. Clonación profunda: Aunque la clonación de un objeto es una tarea fácil y efectiva en muchos casos, puede ser compleja cuando el objeto a clonar tiene referencias a otros objetos. En este caso, se requerirá una clonación profunda, que puede ser difícil y propensa a errores.
 
+2. Costo de memoria: La clonación de objetos puede ser costosa en términos de memoria, especialmente si se clonan objetos grandes y complejos con frecuencia. Esto puede afectar el rendimiento de la aplicación en términos de tiempo de ejecución y uso de memoria.
 
+3. Inestabilidad: Si un objeto prototipo cambia después de ser clonado, puede haber efectos secundarios no deseados en todos los objetos clonados. Esto puede llevar a un comportamiento inesperado de la aplicación y puede ser difícil de depurar.
 
+4. Uso limitado: El patrón Prototype se adapta mejor a situaciones donde los objetos son complejos y costosos de crear. Si los objetos son simples y se pueden crear fácilmente, el patrón Prototype puede agregar una complejidad innecesaria a la aplicación.
+
+5. Diseño inicial complejo: La implementación del patrón Prototype puede requerir una estructura de clase compleja para manejar la clonación de objetos. Esto puede hacer que el diseño inicial de la aplicación sea más complicado y difícil de entender.
+
+#### Test
+
+1. ***¿Cuál es el objetivo principal del patrón Prototype?***
+- a) Simplificar la creación de objetos complejos.
+- b) Permitir la creación de objetos con diferentes implementaciones.
+- c) Permitir la creación de nuevos objetos clonando objetos existentes.
+- Respuesta: c)
+
+2. ***¿Qué método se utiliza para clonar objetos en PHP?***
+- a) __clone()
+- b) __construct()
+- c) __create()
+- Respuesta: a)
+
+3. ***¿Qué significa la frase "shallow copy" en relación con la clonación de objetos?***
+- a) Que se copian solo las propiedades de nivel superior del objeto.
+- b) Que se copian todas las propiedades y métodos del objeto.
+- c) Que se crea una copia exacta del objeto original.
+- Respuesta: a)
+
+4. ***¿Cuál es la diferencia entre el patrón Prototype y el patrón Singleton?***
+- a) El patrón Singleton se utiliza para crear una única instancia de una clase, mientras que el patrón Prototype se utiliza para crear múltiples instancias de una clase.
+- b) El patrón Prototype se utiliza para crear una única instancia de una clase, mientras que el patrón Singleton se utiliza para crear múltiples instancias de una clase.
+- c) No hay diferencia entre ambos patrones.
+- Respuesta: a)
+
+5. ***¿Qué tipos de objetos se benefician más del uso del patrón Prototype?***
+- a) Objetos que son costosos o difíciles de crear.
+- b) Objetos que no tienen una estructura fija.
+- c) Objetos que son simples y no necesitan mucha personalización.
+- Respuesta: a)
+
+### Singleton
+
+El Singleton garantiza que una clase solo tenga una instancia, y proporciona un punto de acceso global a ella. La clase Singleton contiene una instancia privada de sí misma y un constructor privado para evitar que se cree más de una instancia. En su lugar, proporciona un método estático para obtener la única instancia disponible.
+
+Una de las ventajas del patrón Singleton es que garantiza que solo haya una instancia de la clase, lo que puede mejorar el rendimiento y reducir la sobrecarga de memoria. Sin embargo, también puede ser una desventaja, ya que puede ser difícil probar el código que utiliza el Singleton y puede dificultar la extensibilidad del código.
+
+En general, el patrón Singleton es útil cuando se necesita una instancia global de una clase que sea fácilmente accesible en todo el programa y solo necesite ser creada una vez. Sin embargo, también es importante tener en cuenta las posibles desventajas del patrón y considerar cuidadosamente si es el enfoque adecuado para el problema que se está resolviendo.
+
+#### Ejemplo de desarroloo Protorype
+
+En este ejemplo, la clase DatabaseConnection implementa el patrón Singleton para garantizar que solo haya una instancia de la conexión a la base de datos en todo el programa. La clase tiene un constructor privado que solo puede ser llamado internamente y un método estático getInstance que devuelve la única instancia de la clase. Si la instancia aún no ha sido creada, se crea una nueva instancia y se devuelve la conexión PDO.
+
+También se han agregado los métodos __clone y __wakeup para evitar la creación de copias o deserialización de la instancia existente.
+
+Para utilizar esta conexión a la base de datos, simplemente se llama al método getInstance con los parámetros necesarios para crear la conexión, como se muestra a continuación:
+
+php
+Copy code
+$pdo = DatabaseConnection::getInstance('mysql:host=localhost;dbname=mydatabase', 'username', 'password');
+De esta forma, siempre se obtiene la misma instancia de la conexión a la base de datos, lo que ayuda a evitar problemas de concurrencia y mejora la eficiencia del programa.
+
+```js
+class DatabaseConnection
+{
+    private static $instance;
+    private $pdo;
+
+    private function __construct($dsn, $username, $password)
+    {
+        $this->pdo = new PDO($dsn, $username, $password);
+    }
+
+    public static function getInstance($dsn, $username, $password)
+    {
+        if (!isset(self::$instance)) {
+            self::$instance = new self($dsn, $username, $password);
+        }
+        return self::$instance->pdo;
+    }
+
+    public function __clone()
+    {
+        trigger_error('Clone is not allowed.', E_USER_ERROR);
+    }
+
+    public function __wakeup()
+    {
+        trigger_error('Deserializing is not allowed.', E_USER_ERROR);
+    }
+}
+```
+#### Desventajas de Singleton
+
+1. Puede ser difícil de probar: Al usar Singleton en una aplicación, puede ser difícil escribir pruebas unitarias para su código, ya que el estado de Singleton se comparte en toda la aplicación. Esto puede dificultar la reproducibilidad de errores y aumentar la complejidad de las pruebas.
+
+2. Acoplamiento: El patrón Singleton puede aumentar el acoplamiento entre clases, ya que cada clase que utiliza Singleton debe conocer su existencia y utilizarla explícitamente.
+
+3. Dependencia del orden de inicialización: Si las clases dependen del Singleton, su orden de inicialización es importante. Si se inicializa en el orden incorrecto, esto puede provocar errores en la aplicación.
+
+4. Problemas de concurrencia: El patrón Singleton puede tener problemas de concurrencia, especialmente en aplicaciones que se ejecutan en paralelo o en sistemas distribuidos. Si varios subprocesos acceden al Singleton al mismo tiempo, puede provocar errores y comportamientos inesperados.
+
+5. Problemas de escalabilidad: El patrón Singleton puede hacer que sea difícil escalar una aplicación, ya que la aplicación está diseñada para depender de una sola instancia de una clase. Si se necesita escalar una aplicación para manejar más tráfico o usuarios, es posible que el patrón Singleton no sea la mejor opción.
+
+### Test de conocimientos generales
+
+1. ***¿Cuál de los siguientes patrones de diseño creacionales proporciona una interfaz para crear objetos en una superclase, pero permite a las subclases alterar el tipo de objetos que se crearán?***
+- a) Singleton
+- b) Builder
+- c) Abstract Factory
+- d) Prototype
+- Respuesta: c) Abstract Factory
+
+2. ***¿Cuál de los siguientes patrones de diseño creacionales se utiliza para garantizar que solo haya una instancia de una clase y proporcionar un punto de acceso global a ella?***
+- a) Prototype
+- b) Singleton
+- c) Factory Method
+- d) Builder
+- Respuesta: b) Singleton
+
+3. ***¿Cuál de los siguientes patrones de diseño creacionales se utiliza para crear objetos complejos paso a paso y permitir su construcción en diferentes etapas?***
+- a) Prototype
+- b) Abstract Factory
+- c) Builder
+- d) Factory Method
+- Respuesta: c) Builder
+
+4. ***¿Cuál de los siguientes patrones de diseño creacionales se utiliza para crear objetos sin tener que especificar la clase exacta del objeto que se creará?***
+- a) Abstract Factory
+- b) Builder
+- c) Prototype
+- d) Factory Method
+- Respuesta: c) Prototype
+
+5. ***¿Cuál de los siguientes patrones de diseño creacionales se utiliza para definir una interfaz para crear objetos, pero deja que las subclases decidan qué clase instanciar?***
+- a) Prototype
+- b) Singleton
+- c) Abstract Factory
+- d) Factory Method
+- Respuesta: d) Factory Method
+
+6. ***¿Cuál de los siguientes patrones de diseño creacionales se utiliza para crear objetos de una sola vez y mantener una única instancia en toda la aplicación?***
+- a) Abstract Factory
+- b) Singleton
+- c) Builder
+- d) Prototype
+- Respuesta: b) Singleton
+
+7. ***¿Cuál de los siguientes patrones de diseño creacionales se utiliza para crear una jerarquía de fábricas relacionadas o dependientes sin especificar sus clases concretas?***
+- a) Factory Method
+- b) Singleton
+- c) Abstract Factory
+- d) Builder
+- Respuesta: c) Abstract Factory
+
+8. ***¿Cuál de los siguientes patrones de diseño creacionales se utiliza para encapsular la creación de objetos y ocultar la lógica de creación detrás de una interfaz común?***
+- a) Builder
+- b) Prototype
+- c) Abstract Factory
+- d) Factory Method
+- Respuesta: d) Factory Method
+
+9. ***¿Cuál de los siguientes patrones de diseño creacionales se utiliza para crear objetos complejos utilizando una serie de pasos bien definidos y concretos?***
+- a) Abstract Factory
+- b) Singleton
+- c) Builder
+- d) Prototype
+- Respuesta: c) Builder
+
+10. ***¿Cuál de los siguientes patrones de diseño creacionales se utiliza para crear objetos basados en una jerarquía de clases y permitir que una subclase cambie el tipo de objeto que se crea?***
+- a) Factory Method
+- b) Singleton
+- c) Abstract Factory
+- d) Builder
+- Respuesta: a) Factory Method
 
