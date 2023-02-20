@@ -397,7 +397,7 @@ Por ejemplo, si tenemos una clase Pizza que tiene un método para calcular su co
 #### Ejemplo de desarrollo Decorator
 
 Supongamos que tenemos una clase sencilla llamada Text que representa un texto:
-```js
+```php
 class Text
 {
     private $text;
@@ -426,6 +426,7 @@ interface TextDecorator
     public function decorate(Text $text): Text;
 }
 ```
+
 A continuación, creamos una clase BoldTextDecorator que implementa esta interfaz y añade la funcionalidad de poner el texto en negrita:
 
 ```js
@@ -463,6 +464,153 @@ echo $boldAndItalicText->getText(); // Output: <i><b>Hello, world!</b></i>
 ```
 
 En este ejemplo, hemos creado dos decoradores que añaden funcionalidades al objeto **Text**: uno que pone el texto en negrita y otro que lo pone en cursiva. Para decorar un objeto **Text** con ambas funcionalidades, simplemente aplicamos los decoradores en el orden deseado.
+
+### Facade
+
+el patrón de diseño Facade es una técnica que se utiliza para simplificar la complejidad de un sistema. Básicamente, consiste en crear una interfaz única y simplificada que oculta la complejidad de un conjunto de clases o sistemas más complejos y separados.
+
+La idea principal detrás del patrón Facade es proporcionar una interfaz simple y clara que oculte la complejidad subyacente del sistema. En lugar de exponer las complejidades internas del sistema, se presenta una única interfaz de nivel superior que permite a los clientes interactuar con el sistema de una manera fácil y sencilla.
+
+El patrón Facade también ayuda a reducir la dependencia de los clientes del sistema subyacente. En lugar de tener que conocer todos los detalles del sistema, los clientes pueden interactuar con una interfaz de nivel superior y confiar en que el sistema subyacente manejará todas las complejidades necesarias.
+
+En resumen, el patrón Facade es una técnica muy útil para simplificar la complejidad de los sistemas y proporcionar una interfaz de nivel superior que sea fácil de usar para los clientes.
+
+#### Desventajas de Facade
+
+1. Agrega una capa adicional de abstracción: aunque el patrón Facade puede simplificar el uso de un sistema complejo al ocultar su complejidad interna, también puede agregar una capa adicional de abstracción que podría dificultar el entendimiento y la modificación del sistema.
+
+2. Menor control y flexibilidad: al utilizar el patrón Facade, se confía en la interfaz proporcionada por el objeto fachada para interactuar con el sistema subyacente, lo que puede limitar el control y la flexibilidad del desarrollador para personalizar el comportamiento del sistema.
+
+3. Posibles problemas de rendimiento: si el sistema subyacente es muy complejo y la fachada no se implementa de manera eficiente, podría provocar problemas de rendimiento y hacer que el sistema sea más lento.
+
+4. Problemas de escalabilidad: a medida que el sistema subyacente se vuelve más grande y complejo, la fachada también puede volverse más grande y difícil de mantener, lo que puede hacer que el sistema sea menos escalable.
+
+#### Ejemplo de desarrollo Facade
+
+Supongamos que tenemos una aplicación que gestiona el envío de correos electrónicos. Para ello, tenemos distintas clases y métodos que se encargan de la configuración de los correos, la validación de direcciones de email, el envío de los correos, etc.
+
+Podemos crear una fachada que englobe todas estas funcionalidades para que sea más sencillo para el usuario utilizar el servicio de envío de correos. La fachada proporciona una interfaz sencilla que oculta la complejidad del sistema de correo electrónico subyacente.
+
+Aquí te presento un ejemplo de cómo se podría implementar esta fachada:
+
+```js
+// Clase que se encarga de la configuración del correo electrónico
+class Config
+{
+    public function setServer($server)
+    {
+        // Código para establecer el servidor de correo
+    }
+
+    public function setPort($port)
+    {
+        // Código para establecer el puerto de correo
+    }
+
+    public function setUsername($username)
+    {
+        // Código para establecer el nombre de usuario de correo
+    }
+
+    public function setPassword($password)
+    {
+        // Código para establecer la contraseña de correo
+    }
+}
+
+// Clase que se encarga de validar una dirección de correo electrónico
+class Validator
+{
+    public function validate($email)
+    {
+        // Código para validar la dirección de correo electrónico
+    }
+}
+
+// Clase que se encarga de enviar correos electrónicos
+class Mailer
+{
+    public function send($to, $subject, $body)
+    {
+        // Código para enviar el correo electrónico
+    }
+}
+
+// Clase que actúa como fachada para el servicio de correo electrónico
+class MailService
+{
+    private $config;
+    private $validator;
+    private $mailer;
+
+    public function __construct()
+    {
+        $this->config = new Config();
+        $this->validator = new Validator();
+        $this->mailer = new Mailer();
+    }
+
+    public function sendEmail($from, $to, $subject, $body)
+    {
+        // Validar la dirección de correo electrónico
+        if (!$this->validator->validate($from)) {
+            throw new Exception('Invalid email address: ' . $from);
+        }
+
+        // Configurar el servidor de correo electrónico
+        $this->config->setServer('smtp.example.com');
+        $this->config->setPort(587);
+        $this->config->setUsername('user@example.com');
+        $this->config->setPassword('password');
+
+        // Enviar el correo electrónico
+        $this->mailer->send($to, $subject, $body);
+    }
+}
+```
+#### Test
+
+1. ***¿Cuál es el objetivo principal del patrón Facade?***
+- a) Simplificar una interfaz compleja.
+- b) Permitir la comunicación entre objetos sin acoplamiento.
+- c) Añadir funcionalidad a un objeto sin modificar su código.
+- Respuesta: a) Simplificar una interfaz compleja.
+
+2. ***¿Cuál es el objeto central del patrón Facade?***
+- a) La interfaz compleja que se desea simplificar.
+- b) El objeto que actúa como fachada.
+- c) Los objetos que se comunican a través de la fachada.
+- Respuesta: b) El objeto que actúa como fachada.
+
+3. ***¿Cuál es la principal ventaja del patrón Facade?***
+- a) Permite añadir funcionalidad a un objeto sin modificar su código.
+- b) Facilita la comunicación entre objetos sin acoplamiento.
+- c) Simplifica una interfaz compleja.
+- Respuesta: c) Simplifica una interfaz compleja.
+
+4. ***¿Cuál es una posible desventaja del patrón Facade?***
+- a) Puede ser difícil de mantener si la interfaz compleja cambia con frecuencia.
+- b) Añade complejidad al código al introducir una nueva capa de abstracción.
+- c) No permite añadir funcionalidad a un objeto sin modificar su código.
+- Respuesta: a) Puede ser difícil de mantener si la interfaz compleja cambia con frecuencia.
+
+5. ***¿Qué tipo de patrón es el Facade?***
+- a) Patrón de creación.
+- b) Patrón de estructuración.
+- c) Patrón de comportamiento.
+- Respuesta: b) Patrón de estructuración.
+
+### Flyweight
+
+El patrón Flyweight es un patrón de diseño estructural que se utiliza para minimizar el uso de memoria y optimizar el rendimiento mediante el uso compartido de objetos que contienen información repetitiva. Básicamente, el patrón Flyweight permite a los programas evitar la creación de objetos duplicados que comparten la misma información al almacenar esa información en un objeto compartido y reutilizarlo en lugar de crear nuevos objetos.
+
+En este patrón, los objetos se dividen en dos categorías: intrínsecos y extrínsecos. Los objetos intrínsecos contienen información que es común a muchos objetos y se almacena en un objeto compartido llamado flyweight. Los objetos extrínsecos contienen información que es única para cada objeto y se almacena en el objeto cliente que utiliza el flyweight.
+
+Un ejemplo común de uso del patrón Flyweight es en la creación de objetos de gráficos en un programa de dibujo. En lugar de crear un objeto separado para cada píxel en una imagen, el patrón Flyweight permite que un objeto flyweight contenga la información de color y posición de los píxeles y los objetos extrínsecos se utilizan para almacenar información adicional, como la transformación de la imagen.
+
+Algunas de las ventajas del patrón Flyweight son la reducción del uso de memoria, la mejora del rendimiento y la simplificación del código al reducir la cantidad de objetos que se crean. Sin embargo, una de las desventajas es que puede hacer que el código sea más complicado al agregar una capa adicional de abstracción. También puede hacer que el código sea más difícil de depurar debido a la complejidad añadida.
+
+En cuanto a un ejemplo de desarrollo del patrón Flyweight, se puede considerar una aplicación de procesamiento de texto que utiliza objetos de fuente para mostrar texto con diferentes estilos y tamaños. En lugar de crear un objeto de fuente separado para cada instancia de texto, el patrón Flyweight permite que un objeto flyweight contenga información compartida sobre la fuente, como el tipo de letra y el tamaño, y los objetos extrínsecos se utilizan para almacenar información adicional, como el texto y su ubicación en la pantalla.
 
 
 

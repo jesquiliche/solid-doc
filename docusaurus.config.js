@@ -33,7 +33,9 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
-    ({
+    
+    (
+      {
       navbar: {
         title: 'SOLID y patrones de diseño',
         logo: {
