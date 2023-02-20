@@ -1,7 +1,6 @@
 ---
 sidebar_position: 2
 ---
-
 # Patrones de diseño creacionales
 
 ## ¿Qué son los patrones de diseño creacionales?
@@ -30,7 +29,7 @@ las implementaciones concretas de Product.
 - **ConcreteCreator:** las implementaciones concretas de Creator que devuelven una instancia concreta de ConcreteProduct.
 El siguiente es un ejemplo de implementación del patrón Factory Method en PHP:
 
-```php
+```js
 <?php
 interface Product {
     public function operation(): string;
@@ -711,7 +710,7 @@ Una de las ventajas del patrón Singleton es que garantiza que solo haya una ins
 
 En general, el patrón Singleton es útil cuando se necesita una instancia global de una clase que sea fácilmente accesible en todo el programa y solo necesite ser creada una vez. Sin embargo, también es importante tener en cuenta las posibles desventajas del patrón y considerar cuidadosamente si es el enfoque adecuado para el problema que se está resolviendo.
 
-#### Ejemplo de desarroloo Protorype
+#### Ejemplo de desarrollo Singleton
 
 En este ejemplo, la clase DatabaseConnection implementa el patrón Singleton para garantizar que solo haya una instancia de la conexión a la base de datos en todo el programa. La clase tiene un constructor privado que solo puede ser llamado internamente y un método estático getInstance que devuelve la única instancia de la clase. Si la instancia aún no ha sido creada, se crea una nueva instancia y se devuelve la conexión PDO.
 
@@ -719,9 +718,9 @@ También se han agregado los métodos __clone y __wakeup para evitar la creació
 
 Para utilizar esta conexión a la base de datos, simplemente se llama al método getInstance con los parámetros necesarios para crear la conexión, como se muestra a continuación:
 
-php
-Copy code
+```php
 $pdo = DatabaseConnection::getInstance('mysql:host=localhost;dbname=mydatabase', 'username', 'password');
+```
 De esta forma, siempre se obtiene la misma instancia de la conexión a la base de datos, lo que ayuda a evitar problemas de concurrencia y mejora la eficiencia del programa.
 
 ```js
@@ -837,4 +836,15 @@ class DatabaseConnection
 - c) Abstract Factory
 - d) Builder
 - Respuesta: a) Factory Method
+
+#### Bridge
+
+En el contexto de diseño de patrones, el patrón Bridge (puente) es un patrón estructural que permite desacoplar una abstracción de su implementación, de modo que ambas puedan variar independientemente sin afectar a la otra.
+
+La idea básica detrás del patrón Bridge es dividir una abstracción (una clase) y su implementación (otra clase) en dos jerarquías independientes. De esta forma, ambas jerarquías pueden variar por separado y se pueden combinar en tiempo de ejecución para crear diferentes objetos con diferentes implementaciones.
+
+El patrón Bridge se utiliza comúnmente en situaciones en las que se desea separar la interfaz de usuario de la lógica de negocio subyacente. Por ejemplo, supongamos que estamos desarrollando una aplicación de dibujo en la que se pueden crear diferentes tipos de formas, como círculos, rectángulos y triángulos. En lugar de tener una clase "Forma" monolítica que contenga toda la lógica para cada tipo de forma, podríamos utilizar el patrón Bridge para separar la abstracción de "Forma" de su implementación. De esta forma, podríamos tener una jerarquía de clases "Forma" y una jerarquía de clases "Implementación de dibujo" separadas, y combinarlas en tiempo de ejecución para crear diferentes formas con diferentes estilos de dibujo.
+
+En resumen, el patrón Bridge es una técnica útil para desacoplar una abstracción de su implementación, lo que puede mejorar la flexibilidad, la modularidad y la reutilización del código.
+
 
