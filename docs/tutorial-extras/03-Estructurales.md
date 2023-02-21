@@ -602,17 +602,169 @@ class MailService
 
 ### Flyweight
 
-El patrón Flyweight es un patrón de diseño estructural que se utiliza para minimizar el uso de memoria y optimizar el rendimiento mediante el uso compartido de objetos que contienen información repetitiva. Básicamente, el patrón Flyweight permite a los programas evitar la creación de objetos duplicados que comparten la misma información al almacenar esa información en un objeto compartido y reutilizarlo en lugar de crear nuevos objetos.
+El patrón **Flyweight** es un patrón de diseño estructural que se utiliza para minimizar el uso de memoria y optimizar el rendimiento mediante el uso compartido de objetos que contienen información repetitiva. Básicamente, el patrón **Flyweight** permite a los programas evitar la creación de objetos duplicados que comparten la misma información al almacenar esa información en un objeto compartido y reutilizarlo en lugar de crear nuevos objetos.
 
 En este patrón, los objetos se dividen en dos categorías: intrínsecos y extrínsecos. Los objetos intrínsecos contienen información que es común a muchos objetos y se almacena en un objeto compartido llamado flyweight. Los objetos extrínsecos contienen información que es única para cada objeto y se almacena en el objeto cliente que utiliza el flyweight.
 
 Un ejemplo común de uso del patrón Flyweight es en la creación de objetos de gráficos en un programa de dibujo. En lugar de crear un objeto separado para cada píxel en una imagen, el patrón Flyweight permite que un objeto flyweight contenga la información de color y posición de los píxeles y los objetos extrínsecos se utilizan para almacenar información adicional, como la transformación de la imagen.
 
-Algunas de las ventajas del patrón Flyweight son la reducción del uso de memoria, la mejora del rendimiento y la simplificación del código al reducir la cantidad de objetos que se crean. Sin embargo, una de las desventajas es que puede hacer que el código sea más complicado al agregar una capa adicional de abstracción. También puede hacer que el código sea más difícil de depurar debido a la complejidad añadida.
+Algunas de las ventajas del patrón **Flyweight** son la reducción del uso de memoria, la mejora del rendimiento y la simplificación del código al reducir la cantidad de objetos que se crean. Sin embargo, una de las desventajas es que puede hacer que el código sea más complicado al agregar una capa adicional de abstracción. También puede hacer que el código sea más difícil de depurar debido a la complejidad añadida.
 
-En cuanto a un ejemplo de desarrollo del patrón Flyweight, se puede considerar una aplicación de procesamiento de texto que utiliza objetos de fuente para mostrar texto con diferentes estilos y tamaños. En lugar de crear un objeto de fuente separado para cada instancia de texto, el patrón Flyweight permite que un objeto flyweight contenga información compartida sobre la fuente, como el tipo de letra y el tamaño, y los objetos extrínsecos se utilizan para almacenar información adicional, como el texto y su ubicación en la pantalla.
+En cuanto a un ejemplo de desarrollo del patrón **Flyweight**, se puede considerar una aplicación de procesamiento de texto que utiliza objetos de fuente para mostrar texto con diferentes estilos y tamaños. En lugar de crear un objeto de fuente separado para cada instancia de texto, el patrón Flyweight permite que un objeto **flyweight** contenga información compartida sobre la fuente, como el tipo de letra y el tamaño, y los objetos extrínsecos se utilizan para almacenar información adicional, como el texto y su ubicación en la pantalla.
 
+#### Desventajas de Flyweight
 
+1. Complejidad del código: La implementación de Flyweight puede hacer que el código sea más complejo y difícil de entender. Esto se debe a que la técnica requiere que los datos comunes se separen de los objetos que los utilizan, lo que puede complicar la estructura del código.
 
+2. Dificultad para modificar objetos: Como los datos comunes se comparten entre objetos, modificar estos datos puede afectar a todos los objetos que los utilizan. Esto puede hacer que sea difícil modificar objetos individuales sin afectar a otros objetos.
 
+3. Requerimientos de recursos adicionales: Aunque la técnica de Flyweight puede reducir la cantidad de memoria utilizada, también puede requerir recursos adicionales, como tiempo de procesamiento y espacio en disco, para cargar y administrar los objetos.
 
+4. Posible impacto en el rendimiento: Si se utiliza incorrectamente, la técnica de Flyweight puede tener un impacto negativo en el rendimiento. Esto se debe a que la compartición de datos comunes puede aumentar la cantidad de acceso a memoria y la complejidad del código, lo que puede disminuir la velocidad de ejecución del programa.
+
+En general, el uso del patrón de diseño **Flyweight** puede ser beneficioso en ciertas situaciones, pero también puede tener desventajas y debe ser utilizado con cuidado y considerando las circunstancias específicas de cada caso.
+
+#### Ejemplo de desarrollo 
+
+Supongamos que tenemos un sistema de creación de documentos que incluye diferentes tipos de fuentes (Arial, Times New Roman, etc.). En lugar de crear una instancia separada de la fuente cada vez que se utiliza en un documento, podemos utilizar el patrón Flyweight para compartir una única instancia de cada fuente. Esto nos permite reducir la cantidad de memoria utilizada y mejorar el rendimiento del sistema.
+
+Primero, definimos la interfaz Flyweight que incluirá los métodos que deben implementar todas las fuentes concretas:
+
+```js
+interface FontInterface {
+    public function render($text);
+}
+```
+A continuación, creamos una clase concreta que implementa la interfaz Flyweight para una fuente determinada (en este caso, Arial):
+
+```js
+class ArialFont implements FontInterface {
+    private $name = 'Arial';
+    
+    public function render($text) {
+        return "<span style=\"font-family:{$this->name}\">{$text}</span>";
+    }
+}
+```
+
+Luego, creamos una clase Factory que almacenará y administrará las instancias de las fuentes concretas:
+
+```js
+class FontFactory {
+    private $fonts = array();
+    
+    public function getFont($name) {
+        if (!isset($this->fonts[$name])) {
+            switch($name) {
+                case 'Arial':
+                    $this->fonts[$name] = new ArialFont();
+                    break;
+                // Aquí agregaríamos casos adicionales para otras fuentes
+            }
+        }
+        
+        return $this->fonts[$name];
+    }
+}
+```
+Finalmente, utilizamos la clase Factory para crear y utilizar las instancias de fuentes en nuestro sistema de creación de documentos:
+
+```js
+$factory = new FontFactory();
+
+$arial = $factory->getFont('Arial');
+$times = $factory->getFont('Times New Roman');
+
+$document = "<div>{$arial->render('Este es un texto en Arial.')}</div>";
+$document .= "<div>{$times->render('Este es un texto en Times New Roman.')}</div>";
+
+echo $document;
+```
+
+En este ejemplo, utilizamos la clase FontFactory para crear instancias de fuentes concretas (en este caso, Arial y Times New Roman) y las almacenamos en un array. Luego, utilizamos estas instancias para renderizar texto en diferentes partes del documento.
+
+Espero que este ejemplo te haya sido útil para comprender cómo se puede utilizar el patrón Flyweight en PHP.
+
+### Proxy
+
+El patrón Proxy es un patrón de diseño estructural que se utiliza para controlar el acceso a un objeto o servicio. El objetivo principal del patrón Proxy es proporcionar una representación o sustituto de un objeto que puede controlar el acceso a éste y, si es necesario, agregar funcionalidad adicional.
+
+El patrón **Proxy** se compone de los siguientes elementos:
+
+Sujeto: Define la interfaz común que los objetos RealSubject y Proxy deben implementar. Esta interfaz permite que el Proxy actúe como un sustituto del RealSubject.
+
+RealSubject: El objeto real que realiza el trabajo real. El Proxy actúa como un intermediario entre el cliente y el RealSubject, controlando el acceso a éste y proporcionando funcionalidad adicional si es necesario.
+
+Proxy: Un objeto que actúa como sustituto del RealSubject. El Proxy implementa la misma interfaz que el RealSubject y puede realizar alguna funcionalidad adicional antes o después de que el cliente acceda al objeto real.
+
+#### Desventajas de Proxy
+
+1. Complejidad adicional: La implementación del patrón Proxy puede aumentar la complejidad del código, ya que requiere la creación de una clase adicional (el Proxy) para controlar el acceso al objeto real.
+
+2. Sobrecarga adicional: El uso del Proxy puede agregar una sobrecarga adicional al sistema, ya que el Proxy debe realizar las mismas operaciones que el objeto real además de realizar su propia lógica adicional.
+
+3.Limitaciones en la escalabilidad: El patrón Proxy puede tener limitaciones en la escalabilidad en sistemas con grandes volúmenes de tráfico, ya que el Proxy puede convertirse en un cuello de botella para el rendimiento del sistema.
+
+4. Posibilidad de errores de implementación: Si el Proxy no se implementa correctamente, puede haber problemas de seguridad, como el acceso no autorizado a los objetos reales.
+
+Es importante tener en cuenta estas desventajas al decidir si utilizar o no el patrón Proxy en un sistema determinado. El patrón Proxy es útil en situaciones específicas, como en la autenticación de usuarios o en el acceso a recursos remotos, pero su uso debe evaluarse cuidadosamente para determinar si es apropiado para la situación.
+
+#### Ejemplo de desarrollo Proxy
+
+Supongamos que tenemos un servicio web que proporciona información sobre el clima en diferentes ciudades del mundo. El acceso a este servicio es limitado y requiere autenticación. En lugar de permitir que los clientes se conecten directamente al servicio web, podemos utilizar un Proxy para controlar el acceso y autenticar a los clientes.
+
+Primero, definimos la interfaz Sujeto que debe ser implementada por el RealSubject y el Proxy:
+
+```js
+interface ClimaService {
+    public function getTemperatura($ciudad);
+}
+```
+A continuación, creamos la clase RealSubject que implementa la interfaz ClimaService y proporciona acceso al servicio web real:
+
+```js
+class RealClimaService implements ClimaService {
+    public function getTemperatura($ciudad) {
+        // Aquí se implementaría la lógica para obtener la temperatura de la ciudad desde el servicio web real
+        return rand(0, 40);
+    }
+}
+```
+
+Luego, creamos la clase Proxy que también implementa la interfaz ClimaService y actúa como intermediario entre el cliente y el servicio web real:
+
+```js
+class ClimaProxy implements ClimaService {
+    private $realService;
+    private $username;
+    private $password;
+    
+    public function __construct(ClimaService $realService, $username, $password) {
+        $this->realService = $realService;
+        $this->username = $username;
+        $this->password = $password;
+    }
+    
+    public function getTemperatura($ciudad) {
+        // Verificamos si el usuario está autenticado
+        if ($this->autenticar()) {
+            // Si el usuario está autenticado, llamamos al servicio real para obtener la temperatura
+            return $this->realService->getTemperatura($ciudad);
+        } else {
+            // Si el usuario no está autenticado, lanzamos una excepción
+            throw new Exception("Usuario no autenticado.");
+        }
+    }
+    
+    private function autenticar() {
+        // Aquí se implementaría la lógica de autenticación para el servicio web real
+        // Por ejemplo, podríamos verificar si el usuario y la contraseña son válidos
+        return true;
+    }
+}
+```
+Finalmente, utilizamos la clase ClimaProxy para controlar el acceso al servicio web real y proporcionar autenticación:
+
+```js
+$realService = new Real
+```
