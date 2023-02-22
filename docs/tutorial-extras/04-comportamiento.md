@@ -352,8 +352,416 @@ En este ejemplo, se está utilizando la estrategia ***RegularCustomerDiscount** 
 - c) Cuando se desea crear objetos sin especificar la clase exacta que se va a utilizar.
 - Respuesta: a)
 
+### Command
 
+El patrón de diseño Command es un patrón de diseño de software que se utiliza para encapsular una solicitud como un objeto, lo que permite que se puedan parametrizar diferentes solicitudes, encolar o registrar solicitudes y apoyar operaciones reversibles. En este patrón, se separa la solicitud del objeto que la realiza y se encapsula la solicitud en un objeto de comando. El objeto de comando encapsula tanto la solicitud como su información de contexto, y el objeto receptor, que es el responsable de llevar a cabo la operación, se invoca a través de una única interfaz común. Esto permite que se puedan encolar diferentes comandos, deshacer y rehacer las operaciones realizadas por el comando y proporciona una gran flexibilidad y extensibilidad al diseño.
 
+El patrón Command se compone de cuatro componentes principales: el objeto receptor, que realiza la operación, el objeto comando, que encapsula la solicitud y su contexto, el invocador, que maneja los comandos y los ejecuta y el cliente, que crea los objetos comandos y los pasa al invocador para que los ejecute. Este patrón se utiliza a menudo en aplicaciones donde se necesitan operaciones reversibles, como editores de texto, sistemas de gestión de transacciones y procesadores de comandos de voz.
 
+#### Desventajas de Command
 
+Si bien el patrón de diseño Command tiene varias ventajas, también tiene algunas desventajas que se deben tener en cuenta al aplicar este patrón en un diseño de software:
 
+1. Complejidad: El patrón Command puede aumentar la complejidad del código, ya que implica la creación de muchos objetos adicionales, lo que puede dificultar la comprensión y el mantenimiento del código.
+
+2. Sobrecarga de memoria: Debido a que se crean muchos objetos adicionales para implementar el patrón Command, puede haber una sobrecarga de memoria en el sistema, lo que puede tener un impacto en el rendimiento.
+
+3. Dificultad para mantener el historial de comandos: Mantener el historial de comandos en una aplicación que utiliza el patrón Command puede ser difícil, especialmente si se trata de comandos complejos o si el historial es muy largo.
+
+4. Problemas de seguridad: El patrón Command puede introducir problemas de seguridad, ya que los comandos pueden ser manipulados si no se toman medidas adecuadas para protegerlos.
+
+En general, el patrón Command puede ser útil en muchos casos, pero es importante evaluar cuidadosamente las ventajas y desventajas antes de aplicarlo en un diseño de software específico.
+
+#### Ejemplo de desarrollo Command
+
+```js
+// Interfaz para el objeto receptor
+interface Editor {
+    public function escribir(string $texto): void;
+    public function borrar(): void;
+}
+
+// Clase que implementa la interfaz Receptor
+class EditorConcreto implements Editor {
+    private $texto = '';
+
+    public function escribir(string $texto): void {
+        $this->texto .= $texto;
+        echo "Texto agregado: {$texto}\n";
+    }
+
+    public function borrar(): void {
+        $borrado = substr($this->texto, -1);
+        $this->texto = substr($this->texto, 0, -1);
+        echo "Texto borrado: {$borrado}\n";
+    }
+
+    public function getTexto(): string {
+        return $this->texto;
+    }
+}
+
+// Interfaz para el objeto comando
+interface Comando {
+    public function ejecutar(): void;
+    public function deshacer(): void;
+}
+
+// Clase que implementa la interfaz Comando
+class ComandoEscribir implements Comando {
+    private $editor;
+    private $texto;
+
+    public function __construct(Editor $editor, string $texto) {
+        $this->editor = $editor;
+        $this->texto = $texto;
+    }
+
+    public function ejecutar(): void {
+        $this->editor->escribir($this->texto);
+    }
+
+    public function deshacer(): void {
+        $textoBorrado = substr($this->texto, -strlen($this->texto));
+        $this->editor->borrar();
+        echo "Texto deshecho: {$textoBorrado}\n";
+    }
+}
+
+class ComandoBorrar implements Comando {
+    private $editor;
+
+    public function __construct(Editor $editor) {
+        $this->editor = $editor;
+    }
+
+    public function ejecutar(): void {
+        $this->editor->borrar();
+    }
+
+    public function deshacer(): void {
+        // No se puede deshacer el borrado
+    }
+}
+
+// Ejemplo de uso
+$editor = new EditorConcreto();
+$comando1 = new ComandoEscribir($editor, "Hola");
+$comando2 = new ComandoEscribir($editor, " mundo");
+$comando3 = new ComandoBorrar($editor);
+
+$invocador = new Invocador();
+
+$invocador->setComando($comando1);
+$invocador->ejecutarComando();
+
+$invocador->setComando($comando2);
+$invocador->ejecutarComando();
+
+$invocador->setComando($comando3);
+$invocador->ejecutarComando();
+
+echo "Texto final: {$editor->getTexto()}\n";
+$invocador->deshacerComando();
+echo "Texto después de deshacer: {$editor->getTexto()}\n";
+```
+
+En este ejemplo, la interfaz **Editor** define las operaciones que se pueden realizar en un editor de texto, que en este caso se implementan en la clase **EditorConcreto**. La interfaz **Comando** define una operación que se puede ejecutar y deshacer, y se implementa en las clases **ComandoEscribir** y **ComandoBorrar**. La clase Invocador maneja los comandos y permite ejecutarlos y deshacerlos.
+
+En este ejemplo se crean tres comandos: uno para escribir "Hola", otro para escribir "mundo" y otro para borrar el último caracter. Luego, se utilizan los comandos para escribir "Hola mundo" y borrar el último caracter, y se imprime el texto resultante. Finalmente, se deshace el último comando (el borrado) y se imprime el texto resultante después de deshacer.
+
+Este es solo un ejemplo básico, pero el patrón Command se puede aplicar a una amplia variedad de situaciones en las que se requiere una separación clara entre el código que realiza la acción y el código que la controla.
+
+#### Test
+
+1. ***¿Qué elementos principales intervienen en el patrón Command?***
+- a) El receptor, el invocador y el cliente
+- b) El receptor, el invocador y el comando
+- c) El invocador, el cliente y el comando
+- d) El cliente, el comando y el receptor
+
+2. ***¿Qué función tiene el objeto invocador en el patrón Command?***
+- a) Ejecutar los comandos solicitados por el cliente
+- b) Almacenar una lista de comandos ejecutados para poder deshacerlos
+- c) Crear y destruir los objetos comando
+- d) Realizar la acción deseada por el cliente
+
+3. ***¿Qué función tiene el objeto comando en el patrón Command?***
+- a) Realizar la acción deseada por el cliente
+- b) Almacenar una lista de comandos ejecutados para poder deshacerlos
+- c) Crear y destruir los objetos comando
+- d) Ejecutar los comandos solicitados por el cliente
+
+4. ***¿En qué tipo de situaciones es útil el patrón Command?***
+-a) Cuando se necesita encapsular la lógica de una acción en un objeto independiente
+- b) Cuando se quiere aumentar la complejidad de un sistema
+- c) Cuando se quiere evitar la creación de muchos objetos
+- d) Cuando se quiere mejorar el rendimiento de una aplicación
+
+5. ***¿Qué ventaja ofrece el patrón Command para la gestión de errores?***
+- a) Permite encapsular la lógica de recuperación de errores en el objeto comando
+- b) Facilita la propagación de errores en la aplicación
+- c) Reduce el número de errores en la aplicación
+- d) No tiene relación directa con la gestión de errores
+
+Respuestas:
+
+1. b) El receptor, el invocador y el comando
+2. a) Ejecutar los comandos solicitados por el cliente
+3. a) Realizar la acción deseada por el cliente
+4. a) Cuando se necesita encapsular la lógica de una acción en un objeto independiente
+5. a) Permite encapsular la lógica de recuperación de errores en el objeto comando
+
+### Chain of Responsibility
+
+El patrón de diseño Chain of Responsibility, o Cadena de Responsabilidad en español, es un patrón comportamental que permite construir una cadena de objetos que se encargan de manejar una petición en secuencia. Cada objeto de la cadena tiene la posibilidad de manejar la petición o de pasarla al siguiente objeto de la cadena.
+
+De esta manera, se logra desacoplar el objeto que genera la petición del objeto que la maneja, permitiendo que diferentes objetos puedan manejar la petición de manera independiente y, al mismo tiempo, evitando que el objeto que genera la petición tenga que conocer los detalles de su manejo.
+
+El patrón se compone de tres elementos principales:
+
+El Cliente (Client): es el objeto que genera la petición y la envía a la cadena de objetos.
+El Manejador Abstracto (Handler): es una interfaz o clase abstracta que define el método para manejar la petición y para pasarla al siguiente objeto de la cadena.
+El Manejador Concreto (Concrete Handler): es la implementación específica del Manejador Abstracto que se encarga de manejar la petición o de pasarla al siguiente objeto de la cadena.
+Algunos ejemplos de uso común del patrón Chain of Responsibility incluyen el manejo de solicitudes de autenticación en una aplicación web o el manejo de excepciones en una aplicación.
+
+#### Desventajas de **Chain of Responsibility**
+
+Aunque el patrón de diseño Chain of Responsibility presenta ventajas como la flexibilidad y el desacoplamiento de objetos, también puede tener algunas desventajas, entre las cuales se pueden mencionar:
+
+1. Complejidad: La creación de una cadena de objetos puede llevar a una estructura compleja que puede ser difícil de entender y mantener.
+
+2. Rendimiento: Debido a que cada objeto de la cadena tiene que ser consultado para manejar la petición, puede haber una disminución en el rendimiento de la aplicación.
+
+3. Posible pérdida de la petición: Si no se establece correctamente la cadena de responsabilidad, puede ocurrir que la petición sea pasada de un objeto a otro sin ser manejada adecuadamente, lo que podría resultar en una pérdida de la petición.
+
+4. Dificultad para identificar el Manejador Concreto: En algunos casos, puede ser difícil identificar qué objeto de la cadena es responsable de manejar una petición específica.
+
+Es importante tener en cuenta que estas desventajas no siempre son aplicables a todas las situaciones y que el uso del patrón Chain of Responsibility dependerá del contexto específico de la aplicación y de las necesidades del sistema.
+
+#### Ejemplo de desarrollo de **Chain of Responsibility**
+
+Por supuesto, a continuación te mostraré un ejemplo de implementación del patrón Chain of Responsibility en PHP.
+
+Supongamos que queremos manejar diferentes tipos de solicitudes de soporte técnico (por ejemplo, problemas de hardware o software) y que cada solicitud debe ser manejada por un equipo diferente dentro de nuestra organización. Utilizaremos el patrón Chain of Responsibility para delegar la solicitud al equipo correspondiente.
+
+Primero, crearemos la interfaz Manejador (Handler) que define el método para manejar la solicitud y pasarla al siguiente manejador en la cadena:
+
+```js
+interface Manejador {
+    public function manejarSolicitud($tipoSolicitud);
+    public function setSiguiente(Manejador $manejador);
+}
+```
+
+Luego, crearemos la clase AbstractaEquipo (AbstractEquipo) que implementa la interfaz Manejador y define el siguiente manejador en la cadena:
+
+```js
+abstract class AbstractEquipo implements Manejador {
+    protected $siguienteManejador;
+    
+    public function setSiguiente(Manejador $manejador) {
+        $this->siguienteManejador = $manejador;
+    }
+    
+    public function manejarSolicitud($tipoSolicitud) {
+        if ($this->siguienteManejador != null) {
+            $this->siguienteManejador->manejarSolicitud($tipoSolicitud);
+        }
+    }
+}
+```
+
+A continuación, crearemos las clases EquipoHardware (HardwareTeam) y EquipoSoftware (SoftwareTeam) que extienden la clase AbstractEquipo y manejan las solicitudes correspondientes:
+
+```js
+class EquipoHardware extends AbstractEquipo {
+    public function manejarSolicitud($tipoSolicitud) {
+        if ($tipoSolicitud == 'hardware') {
+            echo "El equipo de hardware se encargará de su solicitud.\n";
+        } else {
+            parent::manejarSolicitud($tipoSolicitud);
+        }
+    }
+}
+
+class EquipoSoftware extends AbstractEquipo {
+    public function manejarSolicitud($tipoSolicitud) {
+        if ($tipoSolicitud == 'software') {
+            echo "El equipo de software se encargará de su solicitud.\n";
+        } else {
+            parent::manejarSolicitud($tipoSolicitud);
+        }
+    }
+}
+```
+
+Finalmente, creamos el Cliente (Client) que enviará la solicitud a la cadena de manejadores:
+
+```js
+class Cliente {
+    public function enviarSolicitud($tipoSolicitud) {
+        $equipoHardware = new EquipoHardware();
+        $equipoSoftware = new EquipoSoftware();
+        
+        $equipoHardware->setSiguiente($equipoSoftware);
+        
+        $equipoHardware->manejarSolicitud($tipoSolicitud);
+    }
+}
+
+// Ejemplo de uso
+$cliente = new Cliente();
+$cliente->enviarSolicitud('hardware');
+$cliente->enviarSolicitud('software');
+```
+
+En este ejemplo, el Cliente envía la solicitud al equipo de hardware, y si este no puede manejarla, la pasa al equipo de software. Si ningún equipo puede manejar la solicitud, se imprimirá un mensaje de error.
+
+#### Test
+
+1. ***¿Cuál es el propósito principal del patrón Chain of Responsibility?***
+- a) Manejar solicitudes en una cadena de objetos.
+- b) Simplificar la lógica de negocio en una aplicación.
+- c) Mejorar la eficiencia del código.
+- d) Reducir la cantidad de clases necesarias en una aplicación.
+
+2. ***¿Qué es un manejador en el patrón Chain of Responsibility?***
+- a) Una interfaz que define cómo se manejan las solicitudes.
+- b) Una clase abstracta que implementa la interfaz Manejador.
+- c) Una clase concreta que maneja una solicitud específica.
+- d) Un objeto que se encarga de crear la cadena de manejadores.
+
+3. ***¿Qué ventaja ofrece el patrón Chain of Responsibility en comparación con un enfoque basado en condicionales?***
+- a) Mejora la legibilidad del código.
+- b) Simplifica la implementación de la lógica de negocio.
+- c) Reduce el acoplamiento entre los objetos de la aplicación.
+- d) Aumenta la eficiencia del código.
+
+4. ***¿Cómo se establece la cadena de manejadores en el patrón Chain of Responsibility?***
+- a) Mediante un constructor en cada clase de manejador.
+- b) Mediante un método setSiguiente() en la interfaz Manejador.
+- c) Mediante un método setSiguiente() en la clase abstracta AbstractEquipo.
+- d) Mediante un método setSiguiente() en cada clase de manejador.
+
+5. ***¿Qué desventaja tiene el patrón Chain of Responsibility?***
+- a) Aumenta la complejidad de la aplicación al introducir una cadena de objetos.
+- b) Reduce la flexibilidad al limitar la cantidad de manejadores en la cadena.
+- c) Puede aumentar el tiempo de ejecución al recorrer la cadena de manejadores.
+- d) No se puede utilizar en situaciones en las que cada solicitud debe ser manejada por un objeto diferente.
+ 
+Respuestas
+
+1. a) Manejar solicitudes en una cadena de objetos.
+2. c) Una clase concreta que maneja una solicitud específica.
+3. c) Reduce el acoplamiento entre los objetos de la aplicación.
+4. d) Mediante un método setSiguiente() en cada clase de manejador.
+5. c) Puede aumentar el tiempo de ejecución al recorrer la cadena de manejadores.
+
+### Template Method
+
+El patrón de diseño Template Method es un patrón de comportamiento que define una estructura para un algoritmo en una clase base, delegando algunos pasos del algoritmo a las subclases. En resumen, el patrón Template Method se utiliza cuando se quiere definir el esqueleto de un algoritmo, pero permitiendo que las subclases proporcionen algunos de los detalles específicos.
+
+Por ejemplo, supongamos que tenemos una clase base que representa un proceso de fabricación de un producto. La clase base puede definir el esqueleto de la fabricación del producto, pero delegar algunas etapas específicas a las subclases, como la selección de materiales, el corte y la unión de las piezas, y la pintura.
+
+De esta manera, las subclases pueden proporcionar su propia implementación para cada paso específico, mientras que la clase base garantiza que se siga el mismo proceso general para cada producto que se fabrique.
+
+El patrón Template Method tiene varias ventajas, como la facilidad de extender la funcionalidad del algoritmo, la capacidad de proporcionar una estructura coherente para las clases que lo utilizan, y la reducción de la duplicación de código.
+
+Sin embargo, también tiene algunas desventajas, como la complejidad añadida a la estructura del código y la necesidad de que las subclases sigan el mismo esquema de implementación para cada paso del algoritmo.
+
+#### Desventajas de Template Method
+
+Aunque el patrón Template Method puede ser muy útil en ciertos casos, también tiene algunas desventajas a considerar:
+
+1. Rigidez en la estructura: el patrón Template Method define una estructura fija para los pasos de un algoritmo. Si se necesita agregar o cambiar algún paso en el futuro, puede ser necesario modificar la clase base y todas sus subclases, lo que puede ser costoso y propenso a errores.
+
+2. Sobrecarga de la clase base: si se tienen muchas subclases que heredan de la clase base, esta puede volverse demasiado grande y difícil de entender y mantener.
+
+3. Dificultad para entender el flujo de ejecución: al delegar la implementación de los pasos específicos a las subclases, el flujo de ejecución puede ser difícil de entender, especialmente si hay muchas subclases diferentes.
+
+4. Falta de flexibilidad en la implementación: debido a que el patrón Template Method define una estructura fija, puede ser difícil adaptarlo a situaciones en las que se requiere una mayor flexibilidad en la implementación. En estos casos, puede ser necesario utilizar otro patrón de diseño o estrategias diferentes.
+
+#### Ejemplo de desarrollo **Template Method**
+
+Supongamos que tenemos una clase base "Bebida" que representa una bebida genérica y dos subclases "Cafe" y "Te" que representan bebidas específicas. La clase Bebida define el método template "preparar()", que contiene los pasos generales para preparar una bebida. Las subclases Cafe y Te proporcionan sus propias implementaciones para los pasos específicos de preparación.
+
+```js
+abstract class Bebida {
+    public function preparar() {
+        $this->calentarAgua();
+        $this->ponerIngredientes();
+        $this->servirEnTaza();
+    }
+
+    abstract protected function ponerIngredientes();
+
+    protected function calentarAgua() {
+        echo "Calentando agua...\n";
+    }
+
+    protected function servirEnTaza() {
+        echo "Sirviendo en taza...\n";
+    }
+}
+
+class Cafe extends Bebida {
+    protected function ponerIngredientes() {
+        echo "Añadiendo cafe...\n";
+    }
+}
+
+class Te extends Bebida {
+    protected function ponerIngredientes() {
+        echo "Añadiendo te...\n";
+    }
+}
+```
+
+En este ejemplo, la clase Bebida define el método "preparar()" como un método template que contiene los pasos generales para preparar una bebida. Los pasos generales incluyen calentar el agua, poner los ingredientes y servir en una taza.
+
+Las subclases Cafe y Te proporcionan sus propias implementaciones para el método "ponerIngredientes()", que es un paso específico de la preparación. En el caso del Cafe, el paso es añadir cafe, mientras que en el caso del Te, el paso es añadir te.
+
+De esta manera, la clase base Bebida define el esqueleto general del proceso de preparación de una bebida, pero delega los detalles específicos de cada bebida a las subclases.
+
+#### Test
+
+1. ***¿Cuál es la finalidad del patrón de diseño Template Method?***
+- a) Definir la estructura general de un algoritmo en una clase base y permitir que las subclases implementen los pasos específicos.
+- b) Permitir la comunicación entre objetos sin acoplarlos de forma directa.
+- c) Definir un mecanismo para responder a eventos en un sistema.
+- d) Proporcionar una interfaz unificada para un conjunto de interfaces en un subsistema.
+
+- Respuesta: a) Definir la estructura general de un algoritmo en una clase base y permitir que las subclases implementen los pasos específicos.
+
+2. ***¿Qué método es definido en la clase base del patrón Template Method para definir la estructura general del algoritmo?**
+- a) Abstract Method
+- b) Concrete Method
+- c) Template Method
+- d) Factory Method
+
+- Respuesta: c) Template Method
+
+3. ***¿Qué ventaja ofrece el patrón Template Method al permitir que las subclases implementen los pasos específicos?***
+- a) Facilita la propagación de errores en la aplicación.
+- b) Reduce el número de errores en la aplicación.
+- c) Mejora el rendimiento de la aplicación.
+- d) Proporciona mayor flexibilidad en la implementación del algoritmo.
+
+- Respuesta: d) Proporciona mayor flexibilidad en la implementación del algoritmo.
+
+4. ***¿Qué desventaja tiene el patrón Template Method relacionada con la rigidez en la estructura del algoritmo?***
+- a) Dificultad para entender el flujo de ejecución.
+- b) Falta de flexibilidad en la implementación.
+- c) Sobrecarga de la clase base.
+- d) Ninguna de las anteriores.
+
+- Respuesta: b) Falta de flexibilidad en la implementación.
+
+5. ***¿Qué patrón de diseño es similar al patrón Template Method, pero utiliza una estructura de colaboración de objetos en lugar de una estructura jerárquica de clases?***
+- a) Strategy
+- b) Facade
+- c) Adapter
+- d) Observer
+
+- Respuesta: a) Strategy.
