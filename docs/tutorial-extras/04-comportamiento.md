@@ -137,6 +137,223 @@ Aunque el patrón Observer tiene muchas ventajas, también tiene algunas desvent
 
 Es importante tener en cuenta estas desventajas al decidir si el patrón Observer es apropiado para un sistema en particular. En algunos casos, el patrón Observer puede ser la mejor opción, pero en otros casos, puede haber patrones más apropiados o soluciones alternativas.
 
+#### Test
+
+1. ***¿Qué es el patrón Observer?***
+- a) Un patrón creacional.
+- b) Un patrón estructural.
+- c) Un patrón de comportamiento.
+
+2. ***¿Cuál es el propósito del patrón Observer?***
+- a) Permitir que los objetos cambien su comportamiento en tiempo de ejecución.
+- b) Permitir que los objetos creen otros objetos.
+- c) Permitir que los objetos notifiquen a otros objetos sobre cambios en su estado.
+
+3.***¿Cuáles son los elementos principales del patrón Observer?***
+- a) Sujeto, observador y mensaje.
+- b) Sujeto, observador y notificación.
+- c) Sujeto, observador y actualización.
+
+4. ***¿Qué ventaja proporciona el patrón Observer?***
+- a) Reduce el acoplamiento entre objetos.
+- b) Permite que los objetos creen otros objetos de manera flexible.
+- c) Aumenta la complejidad del código.
+
+5. ***¿Cuál es una desventaja del patrón Observer?***
+- a) Puede causar actualizaciones innecesarias.
+- b) No proporciona un mecanismo para que los objetos cambien su comportamiento en tiempo de ejecución.
+- c) No tiene elementos principales claramente definidos.
+
+Respuestas:
+
+1. c) Un patrón de comportamiento.
+2. c) Permitir que los objetos notifiquen a otros objetos sobre cambios en su estado.
+3. b) Sujeto, observador y notificación.
+4. a) Reduce el acoplamiento entre objetos.
+5. a) Puede causar actualizaciones innecesarias.
+
+### Strategy
+
+El patrón de diseño Strategy es especialmente útil cuando se trabaja con algoritmos que tienen diferentes variaciones o formas de implementación. En lugar de tener que codificar todas estas variaciones en una única clase, se puede separar la implementación del algoritmo en diferentes clases que implementan una interfaz común.
+
+Esto permite que el cliente (el objeto que utiliza el algoritmo) pueda seleccionar dinámicamente qué implementación de la estrategia utilizar en tiempo de ejecución, lo que proporciona una mayor flexibilidad en el diseño del software.
+
+Por ejemplo, si se tiene una aplicación de comercio electrónico que necesita calcular los precios de envío, se pueden implementar diferentes estrategias para el cálculo de los precios de envío, como cálculo basado en peso, cálculo basado en distancia, o cálculo basado en tiempo de entrega. Cada estrategia se implementaría en su propia clase que implementa la misma interfaz común, y el cliente (por ejemplo, el proceso de checkout) puede seleccionar la estrategia adecuada en tiempo de ejecución.
+
+El patrón de diseño Strategy también ayuda a mantener el principio de responsabilidad única, ya que cada clase de estrategia se centra en una única variación del algoritmo, lo que facilita la comprensión, mantenimiento y extensión del código.
+
+En resumen, el patrón de diseño Strategy proporciona una forma flexible y escalable de implementar diferentes variaciones de un algoritmo en una aplicación, permitiendo que el cliente seleccione dinámicamente la estrategia adecuada en tiempo de ejecución.
+
+#### Desventajas de Strategy
+
+Aunque el patrón de diseño Strategy tiene varias ventajas, también presenta algunas desventajas a considerar:
+
+Aumento de complejidad: la implementación del patrón Strategy puede aumentar la complejidad del código, ya que se requiere la creación de múltiples clases para implementar cada variación del algoritmo.
+
+Aumento de consumo de memoria: dado que cada estrategia es una clase separada, la implementación del patrón Strategy puede aumentar el consumo de memoria del sistema.
+
+Mayor dificultad de comprensión: la implementación del patrón Strategy puede dificultar la comprensión del código para desarrolladores que no están familiarizados con el patrón.
+
+Aumento de la cantidad de código: se requiere la creación de varias clases para implementar cada variación del algoritmo, lo que puede aumentar la cantidad de código en la aplicación.
+
+Mayor dificultad para la creación de nuevas estrategias: la creación de nuevas estrategias puede ser más difícil que la implementación de una única clase con un algoritmo, ya que se requiere la creación de una nueva clase que implemente la interfaz de la estrategia.
+
+En general, el patrón de diseño Strategy puede ser una buena opción en situaciones en las que se necesita flexibilidad para cambiar el comportamiento del sistema, pero se debe tener en cuenta que puede aumentar la complejidad y el consumo de recursos de la aplicación.
+
+##### Ejemplo de desarrollo
+
+En este ejemplo, tendremos diferentes estrategias para calcular descuentos en función del tipo de cliente: cliente regular, cliente leal y cliente VIP.
+
+Primero, crearemos la interfaz común para todas las estrategias:
+
+```js
+interface DiscountStrategy {
+    public function calculateDiscount($amount): float;
+}
+```
+
+Luego, crearemos las implementaciones concretas de la estrategia, que son las diferentes formas en que se puede calcular el descuento.
+
+php
+Copy code
+class RegularCustomerDiscount implements DiscountStrategy {
+    public function calculateDiscount($amount): float {
+        // Calcular descuento para cliente regular
+        return $amount * 0.05;
+    }
+}
+
+class LoyalCustomerDiscount implements DiscountStrategy {
+    public function calculateDiscount($amount): float {
+        // Calcular descuento para cliente leal
+        return $amount * 0.10;
+    }
+}
+
+class VIPCustomerDiscount implements DiscountStrategy {
+    public function calculateDiscount($amount): float {
+        // Calcular descuento para cliente VIP
+        return $amount * 0.15;
+    }
+}
+Por último, crearemos el contexto, que es el objeto que utilizará una estrategia para calcular el descuento:
+
+php
+Copy code
+class ShoppingCart {
+    private $discountStrategy;
+    
+    public function __construct(DiscountStrategy $discountStrategy) {
+        $this->discountStrategy = $discountStrategy;
+    }
+    
+    public function setDiscountStrategy(DiscountStrategy $discountStrategy) {
+        $this->discountStrategy = $discountStrategy;
+    }
+    
+    public function calculateDiscount($amount): float {
+        return $this->discountStrategy->calculateDiscount($amount);
+    }
+}
+En este ejemplo, el contexto es la clase ShoppingCart, que tiene una propiedad discountStrategy que apunta a una instancia de la estrategia seleccionada. La clase ShoppingCart tiene un método calculateDiscount que toma el monto total de la compra y utiliza la estrategia seleccionada para calcular el descuento.
+
+Para utilizar este patrón, se puede crear una instancia de la clase ShoppingCart y establecer la estrategia de descuento deseada:
+
+php
+Copy code
+$amount = 100;
+$cart = new ShoppingCart(new RegularCustomerDiscount());
+$discount = $cart->calculateDiscount($amount);
+En este ejemplo, se está utilizando la estrategia RegularCustomerDiscount para calcular el descuento, pero se puede cambiar la estrategia dinámicamente en tiempo de ejecución utilizando el método setDiscountStrategy.
+
+```js
+class RegularCustomerDiscount implements DiscountStrategy {
+    public function calculateDiscount($amount): float {
+        // Calcular descuento para cliente regular
+        return $amount * 0.05;
+    }
+}
+
+class LoyalCustomerDiscount implements DiscountStrategy {
+    public function calculateDiscount($amount): float {
+        // Calcular descuento para cliente leal
+        return $amount * 0.10;
+    }
+}
+
+class VIPCustomerDiscount implements DiscountStrategy {
+    public function calculateDiscount($amount): float {
+        // Calcular descuento para cliente VIP
+        return $amount * 0.15;
+    }
+}
+```
+Por último, crearemos el contexto, que es el objeto que utilizará una estrategia para calcular el descuento:
+
+```js
+class ShoppingCart {
+    private $discountStrategy;
+    
+    public function __construct(DiscountStrategy $discountStrategy) {
+        $this->discountStrategy = $discountStrategy;
+    }
+    
+    public function setDiscountStrategy(DiscountStrategy $discountStrategy) {
+        $this->discountStrategy = $discountStrategy;
+    }
+    
+    public function calculateDiscount($amount): float {
+        return $this->discountStrategy->calculateDiscount($amount);
+    }
+}
+```
+
+En este ejemplo, el contexto es la clase ShoppingCart, que tiene una propiedad discountStrategy que apunta a una instancia de la estrategia seleccionada. La clase ShoppingCart tiene un método calculateDiscount que toma el monto total de la compra y utiliza la estrategia seleccionada para calcular el descuento.
+
+Para utilizar este patrón, se puede crear una instancia de la clase ShoppingCart y establecer la estrategia de descuento deseada:
+
+```js
+$amount = 100;
+$cart = new ShoppingCart(new RegularCustomerDiscount());
+$discount = $cart->calculateDiscount($amount);
+```
+
+En este ejemplo, se está utilizando la estrategia ***RegularCustomerDiscount** para calcular el descuento, pero se puede cambiar la estrategia dinámicamente en tiempo de ejecución utilizando el método **setDiscountStrategy.**
+
+#### Test
+
+1. ***¿Qué problema resuelve el patrón de diseño Strategy?***
+- a) Permite definir un conjunto de algoritmos y encapsular cada uno de ellos dentro de un objeto separado.
+- b) Proporciona una forma de ocultar la complejidad de un objeto detrás de una interfaz simple y consistente.
+- c) Permite crear objetos sin especificar la clase exacta que se va a utilizar.
+- Respuesta: a)
+
+2. ***¿Cuál es el principal beneficio de usar el patrón de diseño Strategy?***
+- a) Proporciona una estructura clara y fácil de mantener.
+- b) Permite una mayor reutilización de código.
+- c) Reduce la complejidad y aumenta la flexibilidad del código.
+- Respuesta: c)
+
+3. ***¿Qué elementos participan en el patrón de diseño Strategy?***
+- a) Contexto, estrategias y clientes.
+- b) Contexto, estrategias y adaptadores.
+- c) Contexto, estrategias y observadores.
+- Respuesta: a)
+
+4. ***¿Cuál es la función de la interfaz en el patrón de diseño Strategy?***
+- a) Define los métodos que serán implementados por las diferentes estrategias.
+- b) Define los métodos que serán utilizados por el cliente.
+- c) Define los métodos que serán utilizados por el contexto.
+- Respuesta: a)
+
+5. ***¿Cuándo es apropiado utilizar el patrón de diseño Strategy?***
+- a) Cuando se desea proporcionar múltiples variantes de un algoritmo o comportamiento.
+- b) Cuando se desea ocultar la complejidad de un objeto detrás de una interfaz simple y consistente.
+- c) Cuando se desea crear objetos sin especificar la clase exacta que se va a utilizar.
+- Respuesta: a)
+
+
+
 
 
 
