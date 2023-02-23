@@ -31,7 +31,6 @@ Estos son solo algunos ejemplos de patrones de comportamiento que se utilizan en
 | Command | Encapsula una solicitud como un objeto, permitiendo la parametrización de los clientes con diferentes solicitudes y la ejecución de diferentes comandos en diferentes momentos. |
 | Chain of Responsibility | Procesa una solicitud a través de una cadena de objetos que tienen la posibilidad de manejarla. |
 | Template Method | Define una estructura de algoritmo en una clase base y permite que las subclases redefinan o extiendan partes específicas del algoritmo. |
-| Interpreter | Interpreta y ejecuta un lenguaje de expresiones. |
 | State | Permite a un objeto cambiar su comportamiento cuando su estado interno cambia. |
 | Iterator | Proporciona una forma de acceder secuencialmente a los elementos de una colección sin exponer su representación subyacente. |
 | Mediator | Define un objeto que encapsula la forma en que los objetos interactúan entre sí, promoviendo el bajo acoplamiento y la independencia entre ellos. |
@@ -765,3 +764,137 @@ De esta manera, la clase base Bebida define el esqueleto general del proceso de 
 - d) Observer
 
 - Respuesta: a) Strategy.
+
+### Iterator
+
+El patrón de diseño Iterator es un patrón de diseño de comportamiento que se utiliza para recorrer colecciones de objetos de manera secuencial, sin exponer los detalles de implementación de la colección subyacente. El patrón Iterator permite que los clientes recorran una colección de objetos sin conocer la estructura interna de la colección.
+
+El patrón Iterator se compone de dos elementos principales: el iterador y la colección. El iterador es un objeto que proporciona un método para acceder a los elementos de la colección de forma secuencial. La colección es un objeto que contiene una serie de elementos, y que proporciona un método para obtener un iterador que se puede utilizar para recorrer los elementos de la colección.
+
+La ventaja principal de utilizar el patrón Iterator es que permite recorrer colecciones de objetos sin exponer la estructura interna de la colección, lo que facilita la creación de código modular y reutilizable. Además, el patrón Iterator puede mejorar el rendimiento de la aplicación, ya que permite que los elementos de la colección se recorran de manera eficiente.
+
+#### Desventajas de Iterator
+Aunque el patrón de diseño Iterator tiene muchas ventajas, también tiene algunas desventajas que se deben considerar al decidir si utilizarlo en una aplicación en particular. A continuación, se describen algunas de las desventajas más importantes del patrón Iterator:
+
+Sobrecarga de código: El patrón Iterator puede aumentar la cantidad de código necesario para implementar una colección y su iterador, lo que puede hacer que el código sea más difícil de mantener y más propenso a errores.
+
+1. Pérdida de eficiencia: En algunos casos, el uso del patrón Iterator puede introducir una sobrecarga de rendimiento debido al uso de objetos adicionales y la necesidad de iterar sobre una colección mediante un objeto en lugar de acceder directamente a los elementos.
+
+2. Limitaciones de la interfaz Iterator: La interfaz Iterator define un conjunto limitado de métodos que deben implementarse para iterar sobre una colección, lo que puede limitar la flexibilidad y la capacidad de personalización del iterador.
+
+3. Problemas de concurrencia: El patrón Iterator no proporciona una solución integrada para problemas de concurrencia, como el acceso simultáneo a una colección por múltiples hilos.
+
+En resumen, el patrón Iterator puede ser una herramienta útil para recorrer colecciones de objetos de manera secuencial y modular, pero también presenta algunas desventajas que deben tenerse en cuenta al decidir si utilizarlo en una aplicación en particular. Es importante evaluar cuidadosamente las ventajas y desventajas del patrón Iterator antes de decidir si utilizarlo en un proyecto específico.
+
+#### Ejemplo de desarrollo Iterator
+
+Un ejemplo de implementación del patrón Iterator en PHP podría ser el siguiente:
+
+```js
+class Coleccion implements \IteratorAggregate
+{
+    private $elementos = array();
+    
+    public function addElemento($elemento)
+    {
+        $this->elementos[] = $elemento;
+    }
+    
+    public function getIterator()
+    {
+        return new Iterador($this->elementos);
+    }
+}
+
+class Iterador implements \Iterator
+{
+    private $elementos = array();
+    private $indice = 0;
+    
+    public function __construct($elementos)
+    {
+        $this->elementos = $elementos;
+    }
+    
+    public function current()
+    {
+        return $this->elementos[$this->indice];
+    }
+    
+    public function key()
+    {
+        return $this->indice;
+    }
+    
+    public function next()
+    {
+        $this->indice++;
+    }
+    
+    public function rewind()
+    {
+        $this->indice = 0;
+    }
+    
+    public function valid()
+    {
+        return isset($this->elementos[$this->indice]);
+    }
+}
+```
+En este ejemplo, la clase **Coleccion** es una colección de elementos y se implementa la interfaz IteratorAggregate, que define un método **getIterator()** que devuelve un objeto Iterador. La clase Iterador es el objeto que recorre la colección y se implementa la interfaz Iterator, que define los métodos ***current(), key(), next(), rewind() y valid()***.
+
+Para utilizar el patrón Iterator, se puede crear una instancia de la clase Coleccion y agregar elementos a la colección mediante el método addElemento(). Luego, se puede recorrer la colección utilizando un bucle foreach que utiliza el iterador devuelto por el método **getIterator()**:
+
+```js
+$coleccion = new Coleccion();
+$coleccion->addElemento("Elemento 1");
+$coleccion->addElemento("Elemento 2");
+$coleccion->addElemento("Elemento 3");
+
+foreach ($coleccion as $indice => $elemento) {
+    echo "Elemento $indice: $elemento\n";
+}
+```
+Este código recorre la colección de elementos utilizando un bucle foreach y el iterador proporcionado por la clase Coleccion. El resultado de la ejecución sería:
+
+
+#### Test
+
+1. ***¿Qué es el patrón de diseño Iterator?***
+- a) Un patrón de diseño de creación
+- b) Un patrón de diseño de comportamiento
+- c) Un patrón de diseño estructural
+- d) Un patrón de diseño arquitectónico
+
+2. ***¿Qué interfaz define el patrón Iterator?***
+- a) Iterator
+- b) Collection
+- c) Aggregator
+- d) Element
+
+3. ***¿Qué clase implementa el método getIterator() en el patrón Iterator?***
+- a) La clase Iterator
+- b) La clase Collection
+- c) La clase Aggregator
+- d) Todas las anteriores
+
+4. ***¿Cuál es una ventaja del patrón Iterator?***
+- a) Mejora el rendimiento de la aplicación
+- b) Facilita la creación de código modular y reutilizable
+- c) Permite recorrer colecciones sin exponer la estructura interna de la colección
+- d) Todas las anteriores
+
+5. ***¿Cuál es una desventaja del patrón Iterator?***
+- a) Puede introducir una sobrecarga de rendimiento
+- b) Limita la flexibilidad y la capacidad de personalización del iterador
+- c) Requiere una cantidad adicional de código para implementar una colección y su iterador
+- d) Todas las anteriores
+
+Respuestas:
+
+1. b) Un patrón de diseño de comportamiento
+2. a) Iterator
+3. b) La clase Collection
+4. d) Todas las anteriores
+5. d) Todas las anteriores
