@@ -1054,3 +1054,19 @@ Este ejemplo ilustra cómo el patrón State permite que un objeto cambie su comp
 - d) No proporciona una interfaz simplificada a un conjunto de interfaces complejas
 
 - Respuesta: a) Aumento de la complejidad del código
+
+### Mediator
+
+çEl patrón Mediator es un patrón de diseño de software que se utiliza para reducir la complejidad de la comunicación entre objetos en un sistema. En lugar de que los objetos se comuniquen directamente entre sí, se utilizan un objeto mediador que coordina la comunicación entre ellos. Esto ayuda a evitar el acoplamiento entre los objetos y permite que el sistema sea más escalable y fácil de mantener.
+
+El objeto mediador actúa como un intermediario entre los objetos que necesitan comunicarse. En lugar de que los objetos se comuniquen directamente, se comunican con el objeto mediador, que se encarga de coordinar la comunicación entre ellos.
+
+Un ejemplo de aplicación del patrón Mediator sería un sistema de chat en línea. En un sistema de chat, hay varios usuarios que necesitan comunicarse entre sí. En lugar de que los usuarios se comuniquen directamente, se utiliza un objeto mediador que coordina la comunicación entre ellos. El objeto mediador en este caso podría ser un servidor de chat que se encarga de enviar los mensajes de un usuario a otro.
+
+Otro ejemplo podría ser un sistema de control de tráfico aéreo. En este caso, los aviones que necesitan aterrizar y despegar necesitan comunicarse entre sí y con la torre de control. En lugar de que los aviones se comuniquen directamente, se utiliza un objeto mediador que coordina la comunicación entre ellos y con la torre de control.
+
+Una posible desventaja del patrón Mediator es que puede introducir un punto único de fallo en el sistema. Si el objeto mediador falla, toda la comunicación entre los objetos puede verse afectada. Sin embargo, esto puede mitigarse mediante el uso de redundancia y mecanismos de recuperación ante fallos.
+
+
+
+
