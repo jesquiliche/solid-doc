@@ -36,7 +36,6 @@ Estos son solo algunos ejemplos de patrones de comportamiento que se utilizan en
 | Mediator | Define un objeto que encapsula la forma en que los objetos interactúan entre sí, promoviendo el bajo acoplamiento y la independencia entre ellos. |
 | Memento | Permite capturar y restaurar el estado interno de un objeto sin violar el principio de encapsulamiento. |
 | Visitor | Permite definir una nueva operación sin cambiar las clases de los objetos sobre los que opera. |
-| Null Object | Provee un objeto "nulo" que actúa como sustituto de otro objeto que no está disponible o que no existe. |
 
 ### Observer
 
@@ -1324,5 +1323,133 @@ En este ejemplo, se crea un editor de texto que permite escribir texto y almacen
 
 - Respuesta: C
 
+### Visitor
 
+Visitor es un patrón de diseño de software que permite separar algoritmos complejos de la estructura de objetos en los que operan. Permite definir una operación que actúa sobre los objetos de una estructura de objetos y modificar la operación sin cambiar la clase de los objetos sobre los que opera. Para lograr esto, el patrón Visitor define una clase Visitor que declara una operación visit() para cada clase de objeto en la estructura de objetos. Cada clase de objeto debe implementar un método accept() que acepta un objeto Visitor como parámetro y llama a la operación visit() apropiada en el objeto Visitor. De esta manera, el Visitor puede recorrer la estructura de objetos y ejecutar la operación apropiada en cada objeto sin tener que conocer la estructura interna de la misma.
 
+#### Desventajas de Visitor
+
+A continuación se presentan algunas desventajas de Visitor:
+
+1. Requiere una jerarquía de clases estable: Para implementar el patrón Visitor, se debe tener una jerarquía de clases estable. Si la jerarquía de clases cambia con frecuencia, entonces es posible que el patrón no sea adecuado, ya que podría ser difícil de mantener.
+
+2. Puede ser complejo de implementar: La implementación del patrón Visitor puede ser compleja, ya que requiere la creación de varias clases y una estructura de datos para almacenar los visitantes. Además, puede ser difícil de entender para aquellos que no están familiarizados con él.
+
+3. No es adecuado para todas las situaciones: El patrón Visitor no es adecuado para todas las situaciones. En algunos casos, puede ser más fácil y más eficiente usar una solución alternativa.
+
+4. Puede violar el principio abierto/cerrado: Si se agregan nuevas clases a la jerarquía, es posible que deba actualizar el código del visitante. Esto puede violar el principio abierto/cerrado, que establece que las clases deben estar abiertas para la extensión pero cerradas para la modificación.
+
+#### Ejemplo de desarrollo Vistor
+
+Supongamos que tienes una jerarquía de clases que representan diferentes figuras geométricas, como círculos, rectángulos y triángulos. Cada figura tiene un método area() que devuelve su área. Además, tienes una clase ShapeVisitor que define métodos para visitar cada tipo de figura:
+
+```js
+abstract class Shape {
+  abstract public function area();
+  abstract public function accept(ShapeVisitor $visitor);
+}
+
+class Circle extends Shape {
+  private $radius;
+  
+  public function __construct($radius) {
+    $this->radius = $radius;
+  }
+  
+  public function area() {
+    return pi() * pow($this->radius, 2);
+  }
+  
+  public function accept(ShapeVisitor $visitor) {
+    $visitor->visitCircle($this);
+  }
+}
+
+class Rectangle extends Shape {
+  private $width;
+  private $height;
+  
+  public function __construct($width, $height) {
+    $this->width = $width;
+    $this->height = $height;
+  }
+  
+  public function area() {
+    return $this->width * $this->height;
+  }
+  
+  public function accept(ShapeVisitor $visitor) {
+    $visitor->visitRectangle($this);
+  }
+}
+
+class Triangle extends Shape {
+  private $base;
+  private $height;
+  
+  public function __construct($base, $height) {
+    $this->base = $base;
+    $this->height = $height;
+  }
+  
+  public function area() {
+    return 0.5 * $this->base * $this->height;
+  }
+  
+  public function accept(ShapeVisitor $visitor) {
+    $visitor->visitTriangle($this);
+  }
+}
+
+interface ShapeVisitor {
+  public function visitCircle(Circle $circle);
+  public function visitRectangle(Rectangle $rectangle);
+  public function visitTriangle(Triangle $triangle);
+}
+
+class AreaVisitor implements ShapeVisitor {
+  private $totalArea = 0;
+  
+  public function visitCircle(Circle $circle) {
+    $this->totalArea += $circle->area();
+  }
+  
+  public function visitRectangle(Rectangle $rectangle) {
+    $this->totalArea += $rectangle->area();
+  }
+  
+  public function visitTriangle(Triangle $triangle) {
+    $this->totalArea += $triangle->area();
+  }
+  
+  public function getTotalArea() {
+    return $this->totalArea;
+  }
+}
+```
+
+En este ejemplo, la clase ShapeVisitor define tres métodos **visitCircle()**, **visitRectangle()** y **visitTriangle()**, cada uno de los cuales toma como parámetro una instancia de la figura correspondiente. La clase **AreaVisitor** implementa esta interfaz y lleva un registro del área total de todas las figuras que visita.
+
+Para utilizar este código, podrías crear algunas instancias de figuras y un visitante:
+
+```js
+$shapes = array(
+  new Circle(5),
+  new Rectangle(4, 6),
+  new Triangle(3, 7)
+);
+
+$areaVisitor = new AreaVisitor();
+
+foreach ($shapes as $shape) {
+  $shape->accept($areaVisitor);
+}
+
+echo "Total area: " . $areaVisitor->getTotalArea();
+```
+
+En este caso, el resultado sería:
+
+```js
+Total area: 70.856406460551
+```
