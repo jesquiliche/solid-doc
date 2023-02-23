@@ -1339,7 +1339,7 @@ A continuación se presentan algunas desventajas de Visitor:
 
 4. Puede violar el principio abierto/cerrado: Si se agregan nuevas clases a la jerarquía, es posible que deba actualizar el código del visitante. Esto puede violar el principio abierto/cerrado, que establece que las clases deben estar abiertas para la extensión pero cerradas para la modificación.
 
-#### Ejemplo de desarrollo Vistor
+#### Ejemplo de desarrollo Visitor
 
 Supongamos que tienes una jerarquía de clases que representan diferentes figuras geométricas, como círculos, rectángulos y triángulos. Cada figura tiene un método area() que devuelve su área. Además, tienes una clase ShapeVisitor que define métodos para visitar cada tipo de figura:
 
