@@ -1057,7 +1057,7 @@ Este ejemplo ilustra cómo el patrón State permite que un objeto cambie su comp
 
 ### Mediator
 
-çEl patrón Mediator es un patrón de diseño de software que se utiliza para reducir la complejidad de la comunicación entre objetos en un sistema. En lugar de que los objetos se comuniquen directamente entre sí, se utilizan un objeto mediador que coordina la comunicación entre ellos. Esto ayuda a evitar el acoplamiento entre los objetos y permite que el sistema sea más escalable y fácil de mantener.
+El patrón Mediator es un patrón de diseño de software que se utiliza para reducir la complejidad de la comunicación entre objetos en un sistema. En lugar de que los objetos se comuniquen directamente entre sí, se utilizan un objeto mediador que coordina la comunicación entre ellos. Esto ayuda a evitar el acoplamiento entre los objetos y permite que el sistema sea más escalable y fácil de mantener.
 
 El objeto mediador actúa como un intermediario entre los objetos que necesitan comunicarse. En lugar de que los objetos se comuniquen directamente, se comunican con el objeto mediador, que se encarga de coordinar la comunicación entre ellos.
 
@@ -1067,6 +1067,262 @@ Otro ejemplo podría ser un sistema de control de tráfico aéreo. En este caso,
 
 Una posible desventaja del patrón Mediator es que puede introducir un punto único de fallo en el sistema. Si el objeto mediador falla, toda la comunicación entre los objetos puede verse afectada. Sin embargo, esto puede mitigarse mediante el uso de redundancia y mecanismos de recuperación ante fallos.
 
+#### Desventajss de Mediator
+
+Las desventajas principales del patrón Mediator son:
+
+1. Complejidad: la implementación de un objeto mediador puede ser compleja y aumentar la complejidad del sistema en general. A medida que aumenta el número de objetos que necesitan comunicarse, puede ser difícil coordinar y mantener la comunicación a través del objeto mediador, lo que puede llevar a una mayor complejidad y dificultad de mantenimiento.
+
+2. Rendimiento: el uso de un objeto mediador puede tener un impacto negativo en el rendimiento del sistema. Si hay muchos objetos que necesitan comunicarse a través del objeto mediador, el mediador puede convertirse en un cuello de botella y ralentizar el sistema. Es importante equilibrar la cantidad de objetos que se comunican a través del mediador para evitar problemas de rendimiento.
+
+3. Dependencia adicional en el sistema: la implementación de un objeto mediador puede crear una dependencia adicional en el sistema. Si el objeto mediador falla, toda la comunicación entre los objetos puede verse afectada. Esto puede hacer que el sistema sea más frágil y difícil de mantener. Es importante diseñar un objeto mediador robusto y asegurarse de que esté bien probado antes de integrarlo en el sistema.
+
+En general, el patrón Mediator puede ser muy útil para reducir el acoplamiento entre los objetos de un sistema y mejorar la modularidad del código. Sin embargo, también puede aumentar la complejidad y tener un impacto negativo en el rendimiento si no se utiliza adecuadamente. Es importante sopesar cuidadosamente los beneficios y las desventajas del patrón Mediator antes de decidir si es adecuado para un proyecto en particular.
+
+#### Ejemplo de desarrollo Mediator
+
+Supongamos que queremos construir un sistema de chat en el que los usuarios puedan enviar mensajes entre sí. Para implementar esto utilizando el patrón Mediator, crearíamos una clase Mediator que se encargue de coordinar la comunicación entre los objetos de usuario.
+
+```js
+// Creamos una clase abstracta de usuario que represente a los usuarios del sistema de chat
+abstract class Usuario {
+    protected $mediator;
+    protected $nombre;
+
+    public function __construct($nombre, $mediator) {
+        $this->nombre = $nombre;
+        $this->mediator = $mediator;
+    }
+
+    // Método para enviar un mensaje
+    public function enviarMensaje($mensaje) {
+        $this->mediator->enviarMensaje($mensaje, $this);
+    }
+
+    // Método para recibir un mensaje
+    public function recibirMensaje($mensaje) {
+        echo "{$this->nombre} ha recibido el mensaje: {$mensaje}\n";
+    }
+}
+
+// Creamos una clase Mediator que se encargue de coordinar la comunicación entre los usuarios
+class ChatMediator {
+    private $usuarios = [];
+
+    // Método para agregar un usuario al sistema
+    public function agregarUsuario($usuario) {
+        $this->usuarios[] = $usuario;
+    }
+
+    // Método para enviar un mensaje a todos los usuarios del sistema excepto al remitente
+    public function enviarMensaje($mensaje, $remitente) {
+        foreach ($this->usuarios as $usuario) {
+            if ($usuario !== $remitente) {
+                $usuario->recibirMensaje($mensaje);
+            }
+        }
+    }
+}
+
+// Creamos dos objetos Usuario y los agregamos al objeto ChatMediator
+$mediador = new ChatMediator();
+$usuario1 = new Usuario("Juan", $mediador);
+$usuario2 = new Usuario("Maria", $mediador);
+$mediador->agregarUsuario($usuario1);
+$mediador->agregarUsuario($usuario2);
+
+// Los usuarios pueden enviar mensajes entre sí a través del objeto ChatMediator
+$usuario1->enviarMensaje("Hola Maria!");
+$usuario2->enviarMensaje("Hola Juan!");
+```
+
+En este ejemplo, la clase Mediator **chatMediator** se encarga de coordinar la comunicación entre los usuarios **Usuario** del sistema de chat. Los usuarios se registran en el objeto ChatMediator al crearse, y cuando quieren enviar un mensaje, llaman al método **enviarMensaje()** del mediador, que a su vez envía el mensaje a todos los usuarios excepto al remitente.
+
+Este es solo un ejemplo básico de cómo se puede implementar el patrón Mediator en PHP. Dependiendo de los requerimientos del sistema, la implementación puede ser más compleja y personalizada.
+
+#### Test
+
+1. ***¿Qué problema resuelve el patrón Mediator?***
+- a. Permite que varios objetos respondan a un evento sin acoplamiento directo
+- b. Encapsula el comportamiento de un objeto en un estado
+- c. Permite que un objeto sea accesible desde cualquier otro objeto
+- d. Ninguna de las anteriores
+
+- Respuesta: a
+
+2. ***¿Cuál es el objetivo del patrón Mediator?***
+- a. Reducir la complejidad de la comunicación entre objetos
+- b. Simplificar la lógica de los estados de un objeto
+- c. Permitir que los objetos accedan a métodos de otros objetos directamente
+- d. Ninguna de las anteriores
+
+- Respuesta: a
+
+3. ***¿Qué clases participan en una implementación del patrón Mediator?***
+- a. Solo la clase Mediator
+- b. La clase Mediator y una o más clases de colegas
+- c. La clase Mediator y la clase Cliente
+- d. Todas las anteriores
+
+- Respuesta: b
+
+4. ***¿Cuál es la función principal de la clase Mediator?***
+- a. Controlar el estado de un objeto
+- b. Coordinar la comunicación entre objetos
+- c. Manejar las solicitudes de los clientes
+- d. Ninguna de las anteriores
+
+- Respuesta: b
+
+5. ***¿Cómo se puede evitar el acoplamiento excesivo en una implementación del patrón Mediator?***
+- a. Limitando la cantidad de clases de colegas que pueden comunicarse con el mediador
+- b. Dividiendo las responsabilidades de la clase Mediator en varias clases más pequeñas
+- c. Definiendo una interfaz común que todas las clases de colegas deben implementar
+- d. Todas las anteriores
+
+- Respuesta: d
+
+### Memento
+
+El patrón Memento es un patrón de diseño de comportamiento que permite capturar y almacenar el estado interno de un objeto sin violar el principio de encapsulamiento. Esto se logra a través de la creación de objetos memento, que contienen una copia del estado actual del objeto, y que pueden ser utilizados para restaurar ese estado en el futuro.
+
+El patrón Memento se compone de tres elementos principales:
+
+1. Originator: es la clase que representa el objeto cuyo estado se quiere almacenar. Esta clase tiene un método para crear un memento, que devuelve un objeto memento que contiene una copia del estado actual del objeto.
+Memento: es la clase que representa el objeto que almacena el estado del objeto originator. Esta clase debe ser inmutable para garantizar la integridad de los datos almacenados.
+
+2. Caretaker: es la clase que se encarga de almacenar y gestionar los objetos memento. Esta clase puede ser utilizada para guardar un histórico de los estados del objeto originator.
+El patrón Memento tiene varias ventajas, como:
+
+3. Permite almacenar el estado de un objeto sin violar el principio de encapsulamiento, ya que los objetos memento solo pueden ser accedidos por el objeto originator.
+
+4. Permite restaurar el estado de un objeto a cualquier punto en el tiempo, lo que puede ser útil en casos de errores o fallos en el sistema.
+Simplifica la lógica del objeto originator, ya que la responsabilidad de almacenar el estado se delega en objetos memento
+
+#### Desventajs de Memento
+
+1. Puede generar un alto consumo de memoria si se almacenan muchos objetos memento.
+2. Puede generar una sobrecarga en la gestión de los objetos memento si se almacenan muchos estados del objeto originator.
+3. Requiere que el objeto originator tenga acceso al estado del objeto memento, lo que puede aumentar el acoplamiento entre las clases.
+
+#### Ejemplo de desarrollo Memento
+
+```js
+class Editor {
+    private $content;
+    
+    public function __construct() {
+        $this->content = "";
+    }
+    
+    public function type(string $text) {
+        $this->content .= $text;
+    }
+    
+    public function getContent() {
+        return $this->content;
+    }
+    
+    public function createMemento() {
+        return new EditorMemento($this->content);
+    }
+    
+    public function restoreMemento(EditorMemento $memento) {
+        $this->content = $memento->getContent();
+    }
+}
+
+class EditorMemento {
+    private $content;
+    
+    public function __construct(string $content) {
+        $this->content = $content;
+    }
+    
+    public function getContent() {
+        return $this->content;
+    }
+}
+
+class History {
+    private $mementos = [];
+    
+    public function addMemento(EditorMemento $memento) {
+        $this->mementos[] = $memento;
+    }
+    
+    public function getMemento(int $index) {
+        return $this->mementos[$index];
+    }
+}
+
+// Ejemplo de uso
+$editor = new Editor();
+$history = new History();
+
+// Se escriben varios textos y se almacena el estado previo en el historial
+$editor->type("Primera línea\n");
+$history->addMemento($editor->createMemento());
+
+$editor->type("Segunda línea\n");
+$history->addMemento($editor->createMemento());
+
+$editor->type("Tercera línea\n");
+$history->addMemento($editor->createMemento());
+
+// Se restaura el estado anterior y se imprime el contenido
+$editor->restoreMemento($history->getMemento(1));
+echo $editor->getContent(); // Salida: Primera línea\nSegunda línea\n
+´´´
+
+En este ejemplo, se crea un editor de texto que permite escribir texto y almacenar el estado previo mediante la creación de un objeto **Memento**. Se utiliza una clase History para almacenar todos los mementos creados, y se puede restaurar el estado anterior de un editor mediante la selección de un memento específico de la historia y su restauración en el editor mediante el método **restoreMemento**.
+
+#### Test
+
+1. ***¿Cuál es el propósito del patrón Memento?***
+
+- A. Crear objetos complejos sin exponer su complejidad interna.
+- B. Facilitar la creación de objetos a partir de un prototipo existente.
+- C. Capturar y almacenar el estado interno de un objeto sin violar el principio de encapsulamiento.
+-D. Establecer una dependencia uno-a-muchos entre objetos para que cuando uno cambie, notifique automáticamente a los demás.
+
+- Respuesta: C
+
+2.  ***¿Qué elementos componen el patrón Memento?***
+
+- A. Origen, objetivo, mediador.
+- B. Origen, objetivo, memento.
+- C. Origen, memento, restaurador.
+- D. Origen, memento, objetivo.
+
+- Respuesta: D
+
+3. ***¿Qué es un Memento en el patrón Memento?***
+
+- A. Una clase que almacena una serie de estados del objeto en cuestión.
+- B. Una clase que proporciona una interfaz para construir diferentes tipos de objetos.
+- C. Una clase que permite la comunicación indirecta entre objetos.
+- D. Una clase que representa un objeto complejo y que se puede crear a partir de un prototipo existente.
+
+- Respuesta: A
+
+4. ***¿Cómo se utiliza el patrón Memento en la programación?***
+
+- A. Se utiliza para crear objetos a partir de un prototipo existente.
+- B. Se utiliza para mantener un registro de los cambios realizados en una base de datos.
+- C. Se utiliza para almacenar el estado interno de un objeto en diferentes momentos y poder restaurarlo si es necesario.
+- D. Se utiliza para establecer una relación uno-a-muchos entre objetos.
+
+- Respuesta: C
+
+5. ***¿Cuál es una ventaja del patrón Memento?***
+
+- A. Facilita la creación de objetos complejos.
+- B. Ayuda a mantener un registro de los cambios realizados en una base de datos.
+- C. Permite almacenar y restaurar el estado interno de un objeto sin violar el principio de encapsulamiento.
+- D. Establece una dependencia uno-a-muchos entre objetos para que cuando uno cambie, notifique automáticamente a los demás.
+
+- Respuesta: C
 
 
 
