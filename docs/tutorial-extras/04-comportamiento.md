@@ -898,3 +898,158 @@ Respuestas:
 3. b) La clase Collection
 4. d) Todas las anteriores
 5. d) Todas las anteriores
+
+### State
+
+El patrón de diseño State es un patrón de comportamiento que permite a un objeto alterar su comportamiento cuando su estado interno cambia. Este patrón está diseñado para separar la lógica de estado de un objeto de su comportamiento, de manera que el objeto pueda cambiar su comportamiento en función de su estado interno sin necesidad de cambiar su clase.
+
+El patrón State se compone de dos elementos principales: el contexto y los estados. El contexto es el objeto que tiene un estado interno que puede cambiar, y los estados son objetos que definen el comportamiento del contexto en función de su estado interno.
+
+El contexto tiene una referencia al estado actual, que puede cambiar en función de eventos o acciones externas. Cuando el estado interno del contexto cambia, el contexto cambia su comportamiento y delega el comportamiento específico al objeto de estado correspondiente.
+
+Un ejemplo de implementación del patrón State podría ser un reproductor de audio con diferentes estados, como "reproduciendo", "pausado" o "detenido". Cada estado define su propio comportamiento para el reproductor de audio, y el reproductor cambia su comportamiento en función del estado actual.
+
+Aquí te dejo un ejemplo de implementación del patrón State en JavaScript para un reproductor de audio:
+
+#### Desventajas del State
+
+Aunque el patrón de diseño State ofrece muchos beneficios, como una mejor organización y modularidad del código y una mayor flexibilidad al cambiar el comportamiento de un objeto en función de su estado interno, también tiene algunas desventajas:
+
+1. Aumento de la complejidad: El patrón State introduce más clases y aumenta la complejidad del código, lo que puede dificultar su mantenimiento y comprensión.
+
+2. Aumento del acoplamiento: El patrón State puede aumentar el acoplamiento entre el contexto y los objetos de estado, lo que puede dificultar la sustitución de un objeto de estado por otro.
+
+3. Dificultad para implementar nuevos estados: La adición de nuevos estados puede ser complicada, especialmente si requieren un comportamiento completamente diferente al de los estados existentes.
+
+4. Requiere una buena comprensión del dominio: El patrón State requiere una buena comprensión del dominio y del comportamiento del objeto en diferentes estados para diseñar los objetos de estado adecuados y definir el comportamiento adecuado para cada estado.
+
+En general, el patrón State es una buena elección cuando se trabaja con objetos que tienen diferentes comportamientos en función de su estado interno, pero es importante evaluar cuidadosamente las ventajas y desventajas de este patrón antes de decidir si es la mejor opción para un proyecto específico.
+
+#### Ejemplo de desarrollo STate
+
+```js
+interface AudioState {
+    public function play(AudioPlayer $player);
+    public function pause(AudioPlayer $player);
+    public function stop(AudioPlayer $player);
+}
+
+class AudioPlayer {
+    private $state;
+
+    public function __construct(AudioState $state) {
+        $this->state = $state;
+    }
+
+    public function setState(AudioState $state) {
+        $this->state = $state;
+    }
+
+    public function play() {
+        $this->state->play($this);
+    }
+
+    public function pause() {
+        $this->state->pause($this);
+    }
+
+    public function stop() {
+        $this->state->stop($this);
+    }
+}
+
+class PlayingState implements AudioState {
+    public function play(AudioPlayer $player) {
+        echo "El reproductor ya está reproduciendo\n";
+    }
+
+    public function pause(AudioPlayer $player) {
+        echo "Pausando el reproductor\n";
+        $player->setState(new PausedState());
+    }
+
+    public function stop(AudioPlayer $player) {
+        echo "Deteniendo el reproductor\n";
+        $player->setState(new StoppedState());
+    }
+}
+
+class PausedState implements AudioState {
+    public function play(AudioPlayer $player) {
+        echo "Reanudando la reproducción\n";
+        $player->setState(new PlayingState());
+    }
+
+    public function pause(AudioPlayer $player) {
+        echo "El reproductor ya está en pausa\n";
+    }
+
+    public function stop(AudioPlayer $player) {
+        echo "Deteniendo el reproductor\n";
+        $player->setState(new StoppedState());
+    }
+}
+
+class StoppedState implements AudioState {
+    public function play(AudioPlayer $player) {
+        echo "Iniciando la reproducción\n";
+        $player->setState(new PlayingState());
+    }
+
+    public function pause(AudioPlayer $player) {
+        echo "El reproductor está detenido, no se puede pausar\n";
+    }
+
+    public function stop(AudioPlayer $player) {
+        echo "El reproductor ya está detenido\n";
+    }
+}
+```
+
+En este código, la interfaz **AudioState** define los métodos **play()**, **pause()** y **stop()** que deben ser implementados por cada estado. La clase **AudioPlayer** es el contexto y tiene una referencia al estado actual en la propiedad **state**. La clase **AudioPlayer** también tiene métodos **play()**, **pause()** y **stop()** que delegan el comportamiento al estado actual.
+
+Las clases **PlayingState**, **PausedState** y **StoppedState** implementan la interfaz **AudioState** y definen el comportamiento correspondiente para cada estado.
+
+Este ejemplo ilustra cómo el patrón State permite que un objeto cambie su comportamiento en función de su estado interno, sin necesidad de cambiar su clase.
+
+#### Test
+
+1. ***¿Cuál es el propósito del patrón State?***
+- a) Separar la creación de objetos complejos de su implementación
+- b) Proporcionar una interfaz simplificada a un conjunto de interfaces complejas
+- c) Permitir que un objeto cambie su comportamiento en función de su estado interno
+- d) Proporcionar un único punto de acceso para acceder a varios objetos relacionados
+
+- Respuesta: c) Permitir que un objeto cambie su comportamiento en función de su estado interno
+
+2. ***¿Cuál es el objeto que cambia de comportamiento en el patrón State?***
+- a) El objeto de contexto
+- b) El objeto de estado
+- c) El objeto cliente
+- d) El objeto adaptadorç
+
+- Respuesta: a) El objeto de contexto
+
+3. ***¿Qué interfaz define los métodos que deben ser implementados por cada estado en el patrón State?***
+- a) State
+- b) Context
+- c) Client
+- d) Adapter
+
+- Respuesta: a) State
+
+4. ***¿Qué ventaja proporciona el patrón State en la organización del código?***
+- a) Simplifica la creación de objetos complejos
+- b) Proporciona una interfaz simplificada a un conjunto de interfaces complejas
+- c) Aumenta la modularidad y la flexibilidad del código
+- d) Reduce el acoplamiento entre objetos
+
+-Respuesta: c) Aumenta la modularidad y la flexibilidad del código
+
+5. ***¿Cuál es una posible desventaja del patrón State?***
+- a) Aumento de la complejidad del código
+- b) Reducción de la modularidad del código
+- c) Aumento del acoplamiento entre objetos
+- d) No proporciona una interfaz simplificada a un conjunto de interfaces complejas
+
+- Respuesta: a) Aumento de la complejidad del código
