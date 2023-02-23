@@ -1273,7 +1273,7 @@ $history->addMemento($editor->createMemento());
 // Se restaura el estado anterior y se imprime el contenido
 $editor->restoreMemento($history->getMemento(1));
 echo $editor->getContent(); // Salida: Primera línea\nSegunda línea\n
-´´´
+```
 
 En este ejemplo, se crea un editor de texto que permite escribir texto y almacenar el estado previo mediante la creación de un objeto **Memento**. Se utiliza una clase History para almacenar todos los mementos creados, y se puede restaurar el estado anterior de un editor mediante la selección de un memento específico de la historia y su restauración en el editor mediante el método **restoreMemento**.
 
@@ -1284,7 +1284,7 @@ En este ejemplo, se crea un editor de texto que permite escribir texto y almacen
 - A. Crear objetos complejos sin exponer su complejidad interna.
 - B. Facilitar la creación de objetos a partir de un prototipo existente.
 - C. Capturar y almacenar el estado interno de un objeto sin violar el principio de encapsulamiento.
--D. Establecer una dependencia uno-a-muchos entre objetos para que cuando uno cambie, notifique automáticamente a los demás.
+- D. Establecer una dependencia uno-a-muchos entre objetos para que cuando uno cambie, notifique automáticamente a los demás.
 
 - Respuesta: C
 
