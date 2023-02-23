@@ -899,6 +899,7 @@ Respuestas:
 4. d) Todas las anteriores
 5. d) Todas las anteriores
 
+
 ### State
 
 El patrón de diseño State es un patrón de comportamiento que permite a un objeto alterar su comportamiento cuando su estado interno cambia. Este patrón está diseñado para separar la lógica de estado de un objeto de su comportamiento, de manera que el objeto pueda cambiar su comportamiento en función de su estado interno sin necesidad de cambiar su clase.
